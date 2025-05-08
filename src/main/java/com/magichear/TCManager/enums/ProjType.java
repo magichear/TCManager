@@ -1,7 +1,7 @@
 package com.magichear.TCManager.enums;
 
 import lombok.Getter;
-
+import com.magichear.TCManager.utils.EnumUtils;
 /**
  * 表示项目的类型：1-国家级项目，2-省部级项目，3-市厅级项目，4-企业合作项目，5-其它类型项目
  */
@@ -17,5 +17,9 @@ public enum ProjType {
 
     ProjType(int value) {
         this.value = value;
+    }
+    
+    public static ProjType fromValue(int value) {
+        return EnumUtils.fromValue(ProjType.class, value);
     }
 }

@@ -1,5 +1,5 @@
 package com.magichear.TCManager.enums;
-
+import com.magichear.TCManager.utils.EnumUtils;
 import lombok.Getter;
 
 /**
@@ -14,5 +14,9 @@ public enum CourseType {
 
     CourseType(int value) {
         this.value = value;
+    }
+
+    public static CourseType fromValue(int value) {
+        return EnumUtils.fromValue(CourseType.class, value);
     }
 }

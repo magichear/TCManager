@@ -1,5 +1,7 @@
 package com.magichear.TCManager.service.impl;
 
+import com.magichear.TCManager.dto.ProjectRequestDTO;
+import com.magichear.TCManager.enums.ProjType;
 import com.magichear.TCManager.mapper.ProjectMapper;
 import com.magichear.TCManager.service.ProjectService;
 import lombok.RequiredArgsConstructor;

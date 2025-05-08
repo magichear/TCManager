@@ -1,8 +1,11 @@
 package com.magichear.TCManager.enums;
+import com.magichear.TCManager.utils.EnumUtils;
+import lombok.Getter;
 
 /**
  * 表示论文的级别：1-CCF-A，2-CCF-B，3-CCF-C，4-中文CCF-A，5-中文CCF-B，6-无级别
  */
+@Getter
 public enum PaperRank {
     CCF_A(1),          // CCF-A级
     CCF_B(2),          // CCF-B级
@@ -17,7 +20,7 @@ public enum PaperRank {
         this.value = value;
     }
 
-    public int getValue() {
-        return value;
+    public static PaperRank fromValue(int value) {
+        return EnumUtils.fromValue(PaperRank.class, value);
     }
 }

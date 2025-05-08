@@ -1,11 +1,10 @@
 package com.magichear.TCManager.controller;
 
+import com.magichear.TCManager.service.CourseService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import com.magichear.TCManager.service.CourseService;
 
 /**
  * 课程控制器

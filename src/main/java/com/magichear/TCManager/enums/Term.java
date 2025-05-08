@@ -1,7 +1,7 @@
 package com.magichear.TCManager.enums;
 
 import lombok.Getter;
-
+import com.magichear.TCManager.utils.EnumUtils;
 /**
  * 表示学期的类型：1-春季学期，2-夏季学期，3-秋季学期
  */
@@ -15,5 +15,9 @@ public enum Term {
 
     Term(int value) {
         this.value = value;
+    }
+
+    public static Term fromValue(int value) {
+        return EnumUtils.fromValue(Term.class, value);
     }
 }

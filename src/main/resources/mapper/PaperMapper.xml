@@ -2,4 +2,107 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.magichear.TCManager.mapper.PaperMapper">
 
+    <!-- 插入论文基本信息 -->
+    <insert id="insertPaper">
+        INSERT INTO PAPER (PAPER_NUM, PAPER_NAME, PAPER_SRC, PAPER_YEAR, PAPER_TYPE, PAPER_RANK)
+        VALUES (#{paperNum}, #{paperName}, #{paperSrc}, #{paperYear}, #{paperType.value}, #{paperRank.value})
+    </insert>
+
+    <!-- 删除论文基本信息 -->
+    <delete id="deletePaper">
+        DELETE FROM PAPER
+        WHERE PAPER_NUM = #{paperNum}
+    </delete>
+
+    <!-- 更新论文基本信息 -->
+    <update id="updatePaper">
+        UPDATE PAPER
+        SET PAPER_NAME = #{paperName}, PAPER_SRC = #{paperSrc}, PAPER_YEAR = #{paperYear},
+            PAPER_TYPE = #{paperType.value}, PAPER_RANK = #{paperRank.value}
+        WHERE PAPER_NUM = #{paperNum}
+    </update>
+
+    <!-- 按序号查询论文 -->
+    <select id="selectPaperByNum" resultMap="PaperResultMap">
+        SELECT PAPER_NUM, PAPER_NAME, PAPER_SRC, PAPER_YEAR, PAPER_TYPE, PAPER_RANK
+        FROM PAPER
+        WHERE PAPER_NUM = #{paperNum}
+    </select>
+    <!-- 用resultMap更灵活，可以约定接口，不用跟数据库强相关 -->
+    <resultMap id="PaperResultMap" type="com.magichear.TCManager.dto.PaperDTO">
+        <id property="paperNum" column="PAPER_NUM" />
+        <result property="paperName" column="PAPER_NAME" />
+        <result property="paperSrc" column="PAPER_SRC" />
+        <result property="paperYear" column="PAPER_YEAR" />
+        <result property="paperType" column="PAPER_TYPE" javaType="com.magichear.TCManager.enums.PaperType" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler" />
+        <result property="paperRank" column="PAPER_RANK" javaType="com.magichear.TCManager.enums.PaperRank" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler" />
+    </resultMap>
+
+    <!-- 插入作者关联信息 -->
+    <insert id="insertAuthor">
+        INSERT INTO PUBLISH_PAPERS (TEACHER_ID, PAPER_NUM, PUBLISH_RANK, PUBLISH_ISCORRESPONDING)
+        VALUES (#{teacherId}, #{paperNum}, #{publishRank}, #{isCorresponding})
+    </insert>
+
+    <!-- 删除作者关联信息 -->
+    <delete id="deleteAuthor">
+        DELETE FROM PUBLISH_PAPERS
+        WHERE PAPER_NUM = #{paperNum} AND TEACHER_ID = #{teacherId}
+    </delete>
+
+    <!-- 删除所有作者关联信息 -->
+    <delete id="deleteAuthorsByPaperNum">
+        DELETE FROM PUBLISH_PAPERS
+        WHERE PAPER_NUM = #{paperNum}
+    </delete>
+
+    <!-- 按论文序号查询所有作者 -->
+    <select id="selectAuthorsByPaperNum" resultMap="AuthorResultMap">
+        SELECT 
+            pp.TEACHER_ID, 
+            pp.PAPER_NUM, 
+            p.PAPER_NAME, 
+            p.PAPER_SRC, 
+            p.PAPER_YEAR, 
+            p.PAPER_TYPE, 
+            p.PAPER_RANK, 
+            pp.PUBLISH_RANK, 
+            pp.PUBLISH_ISCORRESPONDING
+        FROM PUBLISH_PAPERS pp
+        JOIN PAPER p ON pp.PAPER_NUM = p.PAPER_NUM
+        WHERE pp.PAPER_NUM = #{paperNum}
+    </select>
+    
+    <resultMap id="AuthorResultMap" type="com.magichear.TCManager.dto.PublishPaperDTO">
+        <id property="teacherId" column="TEACHER_ID" />
+        <result property="paperNum" column="PAPER_NUM" />
+        <result property="paperName" column="PAPER_NAME" />
+        <result property="paperSrc" column="PAPER_SRC" />
+        <result property="paperYear" column="PAPER_YEAR" />
+        <result property="paperType" column="PAPER_TYPE" javaType="com.magichear.TCManager.enums.PaperType" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler" />
+        <result property="paperRank" column="PAPER_RANK" javaType="com.magichear.TCManager.enums.PaperRank" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler" />
+        <result property="publishRank" column="PUBLISH_RANK" />
+        <result property="isCorresponding" column="PUBLISH_ISCORRESPONDING" />
+    </resultMap>
+
+    <!-- 查询某论文是否已有通讯作者 -->
+    <select id="checkCorrespondingAuthorExist" resultType="boolean">
+        SELECT COUNT(1) > 0
+        FROM PUBLISH_PAPERS
+        WHERE PAPER_NUM = #{paperNum} AND PUBLISH_ISCORRESPONDING = 1
+    </select>
+
+    <!-- 查询某论文是否存在重复排名 -->
+    <select id="checkDuplicateRank" resultType="boolean">
+        SELECT COUNT(1) > 0
+        FROM PUBLISH_PAPERS
+        WHERE PAPER_NUM = #{paperNum} AND PUBLISH_RANK = #{rank}
+    </select>
+    
+    <!-- 查询某论文是否存在重复排名（忽略指定作者） -->
+    <select id="checkDuplicateRankExcludingAuthor" resultType="boolean">
+        SELECT COUNT(1) > 0
+        FROM PUBLISH_PAPERS
+        WHERE PAPER_NUM = #{paperNum} AND PUBLISH_RANK = #{rank} AND TEACHER_ID != #{teacherId}
+    </select>
 </mapper>

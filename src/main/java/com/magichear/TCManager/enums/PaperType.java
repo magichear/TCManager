@@ -1,7 +1,7 @@
 package com.magichear.TCManager.enums;
 
 import lombok.Getter;
-
+import com.magichear.TCManager.utils.EnumUtils;
 /**
  * 表示论文的类型：1-full paper，2-short paper，3-poster paper，4-demo paper
  */
@@ -16,5 +16,9 @@ public enum PaperType {
 
     PaperType(int value) {
         this.value = value;
+    }
+
+    public static PaperType fromValue(int value) {
+        return EnumUtils.fromValue(PaperType.class, value);
     }
 }
