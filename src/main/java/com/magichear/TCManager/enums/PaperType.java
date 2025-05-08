@@ -1,0 +1,20 @@
+package com.magichear.TCManager.enums;
+
+import lombok.Getter;
+
+/**
+ * 表示论文的类型：1-full paper，2-short paper，3-poster paper，4-demo paper
+ */
+@Getter
+public enum PaperType {
+    FULL_PAPER(1),   // Full Paper
+    SHORT_PAPER(2),  // Short Paper
+    POSTER_PAPER(3), // Poster Paper
+    DEMO_PAPER(4);   // Demo Paper
+
+    private final int value;
+
+    PaperType(int value) {
+        this.value = value;
+    }
+}
