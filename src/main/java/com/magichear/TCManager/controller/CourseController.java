@@ -1,5 +1,6 @@
 package com.magichear.TCManager.controller;
 
+import com.magichear.TCManager.dto.LectureCourseDTO;
 import com.magichear.TCManager.service.CourseService;
 import lombok.RequiredArgsConstructor;
 
@@ -17,4 +18,42 @@ public class CourseController {
 
     @Autowired
     private final CourseService courseService;
+
+    /**
+     * 添加主讲课程记录
+     * @param lecture 主讲课程信息
+     */
+    @PostMapping
+    public void addLecture(@RequestBody LectureCourseDTO lecture) {
+        courseService.addLecture(lecture);
+    }
+
+    /**
+     * 更新主讲课程记录
+     * @param lecture 主讲课程信息
+     */
+    @PutMapping
+    public void updateLecture(@RequestBody LectureCourseDTO lecture) {
+        courseService.updateLecture(lecture);
+    }
+
+    /**
+     * 删除主讲课程记录
+     * @param courseId 课程号
+     * @param teacherId 教师工号
+     */
+    @DeleteMapping("/{courseId}/teachers/{teacherId}")
+    public void deleteLecture(@PathVariable String courseId, @PathVariable String teacherId) {
+        courseService.deleteLecture(courseId, teacherId);
+    }
+
+    /**
+     * 获取某课程的主讲学时总和
+     * @param courseId 课程号
+     * @return 主讲学时总和
+     */
+    @GetMapping("/{courseId}/total-hours")
+    public Integer getTotalLectureHours(@PathVariable String courseId) {
+        return courseService.getTotalLectureHours(courseId);
+    }
 }

@@ -38,22 +38,21 @@
         <result property="paperRank" column="PAPER_RANK" javaType="com.magichear.TCManager.enums.PaperRank" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler" />
     </resultMap>
 
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+
     <!-- 插入作者关联信息 -->
     <insert id="insertAuthor">
         INSERT INTO PUBLISH_PAPERS (TEACHER_ID, PAPER_NUM, PUBLISH_RANK, PUBLISH_ISCORRESPONDING)
         VALUES (#{teacherId}, #{paperNum}, #{publishRank}, #{isCorresponding})
     </insert>
 
-    <!-- 删除作者关联信息 -->
+    <!-- 删除所有作者关联信息 -->
     <delete id="deleteAuthor">
         DELETE FROM PUBLISH_PAPERS
-        WHERE PAPER_NUM = #{paperNum} AND TEACHER_ID = #{teacherId}
-    </delete>
-
-    <!-- 删除所有作者关联信息 -->
-    <delete id="deleteAuthorsByPaperNum">
-        DELETE FROM PUBLISH_PAPERS
         WHERE PAPER_NUM = #{paperNum}
+        <if test="teacherId != null">
+            AND TEACHER_ID = #{teacherId}
+        </if>
     </delete>
 
     <!-- 按论文序号查询所有作者 -->
@@ -97,12 +96,5 @@
         SELECT COUNT(1) > 0
         FROM PUBLISH_PAPERS
         WHERE PAPER_NUM = #{paperNum} AND PUBLISH_RANK = #{rank}
-    </select>
-    
-    <!-- 查询某论文是否存在重复排名（忽略指定作者） -->
-    <select id="checkDuplicateRankExcludingAuthor" resultType="boolean">
-        SELECT COUNT(1) > 0
-        FROM PUBLISH_PAPERS
-        WHERE PAPER_NUM = #{paperNum} AND PUBLISH_RANK = #{rank} AND TEACHER_ID != #{teacherId}
     </select>
 </mapper>

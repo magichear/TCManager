@@ -6,6 +6,8 @@ import com.magichear.TCManager.enums.PaperRank;
 import com.magichear.TCManager.enums.PaperType;
 import com.magichear.TCManager.mapper.PaperMapper;
 import com.magichear.TCManager.service.PaperService;
+import com.magichear.TCManager.utils.EnumUtils;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +40,7 @@ public class PaperServiceImpl implements PaperService {
     public void updatePaper(PaperDTO paper, List<PublishPaperDTO> authors) {
         validatePaper(paper, authors);
         paperMapper.updatePaper(paper);
-        paperMapper.deleteAuthorsByPaperNum(paper.getPaperNum());
+        paperMapper.deleteAuthor(paper.getPaperNum(), null);
         for (PublishPaperDTO author : authors) {
             paperMapper.insertAuthor(author);
         }
@@ -47,7 +49,7 @@ public class PaperServiceImpl implements PaperService {
     @Override
     @Transactional
     public void deletePaper(int paperNum) {
-        paperMapper.deleteAuthorsByPaperNum(paperNum);
+        paperMapper.deleteAuthor(paperNum, null);
         paperMapper.deletePaper(paperNum);
     }
 
@@ -67,10 +69,10 @@ public class PaperServiceImpl implements PaperService {
      * @param authors 作者信息列表
      */
     private void validatePaper(PaperDTO paper, List<PublishPaperDTO> authors) {
-        if (!isValidEnumValue(PaperType.class, paper.getPaperType().getValue())) {
+        if (!EnumUtils.isValidEnumValue(PaperType.class, paper.getPaperType().getValue())) {
             throw new IllegalArgumentException("Invalid paper type: " + paper.getPaperType());
         }
-        if (!isValidEnumValue(PaperRank.class, paper.getPaperRank().getValue())) {
+        if (!EnumUtils.isValidEnumValue(PaperRank.class, paper.getPaperRank().getValue())) {
             throw new IllegalArgumentException("Invalid paper rank: " + paper.getPaperRank());
         }
     
@@ -96,21 +98,5 @@ public class PaperServiceImpl implements PaperService {
         if (!hasCorrespondingAuthor) {
             throw new IllegalArgumentException("No corresponding author found for paperNum: " + paper.getPaperNum());
         }
-    }
-
-    /**
-     * 校验枚举值是否合法
-     * @param enumClass 枚举类
-     * @param value 枚举值
-     * @param <E> 枚举类型
-     * @return 是否合法
-     */
-    private <E extends Enum<E>> boolean isValidEnumValue(Class<E> enumClass, int value) {
-        for (E enumConstant : enumClass.getEnumConstants()) {
-            if (((Enum<?>) enumConstant).ordinal() + 1 == value) {
-                return true;
-            }
-        }
-        return false;
     }
 }

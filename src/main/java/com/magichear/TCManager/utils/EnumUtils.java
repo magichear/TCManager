@@ -23,4 +23,26 @@ public class EnumUtils {
         }
         throw new IllegalArgumentException("No enum constant for value: " + value + " in " + enumClass.getName());
     }
+
+    /**
+     * 校验枚举值是否合法
+     *
+     * @param enumClass 枚举类
+     * @param value     枚举值
+     * @param <T>       枚举类型
+     * @return 是否合法
+     */
+    public static <T extends Enum<T>> boolean isValidEnumValue(Class<T> enumClass, int value) {
+        for (T enumConstant : enumClass.getEnumConstants()) {
+            try {
+                int enumValue = (int) enumClass.getMethod("getValue").invoke(enumConstant);
+                if (enumValue == value) {
+                    return true;
+                }
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Failed to access getValue method for enum: " + enumClass.getName(), e);
+            }
+        }
+        return false;
+    }
 }

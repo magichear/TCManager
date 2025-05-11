@@ -31,6 +31,7 @@ public interface ProjectMapper {
      */
     int updateProject(ProjectionDTO project);
 
+
     /**
      * 按项目号查询项目
      * @param projId 项目号
@@ -58,7 +59,7 @@ public interface ProjectMapper {
      * @param projId 项目号
      * @return 承担记录列表
      */
-    List<InChargeDTO> selectChargesByProjectId(@Param("projId") String projId);
+    List<InChargeDTO> selectChargesById(@Param("projId") String projId, @Param("teacherId") String teacherId);
 
     /**
      * 查询某项目是否存在重复排名
@@ -66,7 +67,7 @@ public interface ProjectMapper {
      * @param rank 排名
      * @return 是否存在重复排名
      */
-    boolean checkProjectRankDuplicate(@Param("projId") String projId, @Param("rank") int rank);
+    boolean checkProjectRankDuplicate(@Param("projId") String projId, @Param("rank") int rank, @Param("teacherId") String teacherId);
 
     /**
      * 计算某项目所有教师的承担经费总和

@@ -193,5 +193,5 @@ def test_course_controller():
 # 执行测试
 if __name__ == "__main__":
     test_paper_controller()
-    # test_project_controller()
-    # test_course_controller()
+    test_project_controller()
+    test_course_controller()

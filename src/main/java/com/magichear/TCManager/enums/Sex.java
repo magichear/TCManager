@@ -3,7 +3,7 @@ package com.magichear.TCManager.enums;
 import lombok.Getter;
 import com.magichear.TCManager.utils.EnumUtils;
 /**
- * 表示学期的类型：1-春季学期，2-夏季学期，3-秋季学期
+ * 表示学期的类型：1-男，2-女
  */
 @Getter
 public enum Sex {

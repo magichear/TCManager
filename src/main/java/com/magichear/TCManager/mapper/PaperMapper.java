@@ -54,13 +54,6 @@ public interface PaperMapper {
     int deleteAuthor(@Param("paperNum") int paperNum, @Param("teacherId") String teacherId);
 
     /**
-     * 删除某篇论文的所有作者关联信息
-     * @param paperNum 论文序号
-     * @return 删除的行数
-     */
-    int deleteAuthorsByPaperNum(@Param("paperNum") int paperNum);
-
-    /**
      * 按论文序号查询所有作者
      * @param paperNum 论文序号
      * @return 作者列表
@@ -82,12 +75,4 @@ public interface PaperMapper {
      */
     boolean checkDuplicateRank(@Param("paperNum") int paperNum, @Param("rank") int rank);
 
-    /**
-     * 查询某论文是否存在重复排名（忽略指定作者）
-     * @param paperNum 论文序号
-     * @param rank 排名
-     * @param teacherId 教师工号
-     * @return 是否存在重复排名
-     */
-    boolean checkDuplicateRankExcludingAuthor(@Param("paperNum") int paperNum, @Param("rank") int rank, @Param("teacherId") String teacherId);
 }
