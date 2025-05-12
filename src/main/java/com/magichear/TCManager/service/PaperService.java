@@ -4,6 +4,7 @@ import com.magichear.TCManager.dto.PaperDTO;
 import com.magichear.TCManager.dto.PublishPaperDTO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 提供教师论文发表信息的增、删、改、查功能。
@@ -17,7 +18,7 @@ public interface PaperService {
      * @param paper 论文信息
      * @param authors 作者信息列表
      */
-    void addPaper(PaperDTO paper, List<PublishPaperDTO> authors);
+    Map<String, Object> addPaper(PaperDTO paper, List<PublishPaperDTO> authors);
 
     /**
      * 更新论文记录

@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
+import org.springframework.http.ResponseEntity;
+import java.util.*;
 
 /**
  * 论文控制器
@@ -31,8 +31,9 @@ public class PaperController {
      * @param authors 作者信息列表
      */
     @PostMapping
-    public void addPaper(@RequestBody PaperRequestDTO paperRequest) {
-        paperService.addPaper(paperRequest.getPaper(), paperRequest.getAuthors());
+    public ResponseEntity<Map<String, Object>> addPaper(@RequestBody PaperRequestDTO paperRequest) {
+        Map<String, Object> result = paperService.addPaper(paperRequest.getPaper(), paperRequest.getAuthors());
+        return ResponseEntity.ok(result);
     }
 
     /**

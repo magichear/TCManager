@@ -1,6 +1,8 @@
 package com.magichear.TCManager.service.impl;
 
+import com.magichear.TCManager.dto.InChargeDTO;
 import com.magichear.TCManager.dto.ProjectRequestDTO;
+import com.magichear.TCManager.dto.ProjectionDTO;
 import com.magichear.TCManager.enums.ProjType;
 import com.magichear.TCManager.mapper.ProjectMapper;
 import com.magichear.TCManager.service.ProjectService;
@@ -22,9 +24,20 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public void addProject(ProjectRequestDTO projectRequest) {
+        // 使用工厂方法生成带有项目ID的 ProjectionDTO
+        ProjectionDTO newProject = ProjectionDTO.createWithGeneratedId(projectRequest.getProject());
+    
+        // 校验项目合法性
         validateProject(projectRequest);
-        projectMapper.insertProject(projectRequest.getProject());
-        projectRequest.getCharges().forEach(projectMapper::insertCharge);
+    
+        // 插入项目信息
+        projectMapper.insertProject(newProject);
+    
+        // 插入承担信息
+        for (InChargeDTO charge : projectRequest.getCharges()) {
+            charge.setProjId(newProject.getProjId()); // 设置项目号
+            projectMapper.insertCharge(charge);
+        }
     }
 
     @Override

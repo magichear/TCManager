@@ -20,7 +20,7 @@ public class CourseController {
     private final CourseService courseService;
 
     /**
-     * 添加主讲课程记录
+     * 添加主讲课程记录    直接使用类级路径，并以Post与Put区分
      * @param lecture 主讲课程信息
      */
     @PostMapping

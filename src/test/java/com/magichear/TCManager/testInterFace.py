@@ -10,7 +10,6 @@ def test_paper_controller():
     # 添加论文
     paper_request = {
         "paper": {
-            "paperNum": 1,
             "paperName": "深度学习在图像处理中的应用",
             "paperSrc": "IEEE Transactions on Image Processing",
             "paperYear": "2023-05-01",
@@ -20,13 +19,11 @@ def test_paper_controller():
         "authors": [
             {
                 "teacherId": "T001",
-                "paperNum": 1,
                 "publishRank": 1,
                 "isCorresponding": True,
             },
             {
                 "teacherId": "T002",
-                "paperNum": 1,
                 "publishRank": 2,
                 "isCorresponding": False,
             },
@@ -51,7 +48,6 @@ def test_paper_controller():
     # 更新论文
     updated_paper_request = {
         "paper": {
-            "paperNum": 1,
             "paperName": "深度学习在医学图像中的应用",
             "paperSrc": "IEEE Transactions on Medical Imaging",
             "paperYear": "2023-06-01",
@@ -61,13 +57,11 @@ def test_paper_controller():
         "authors": [
             {
                 "teacherId": "T001",
-                "paperNum": 1,
                 "publishRank": 3,  # 修改为不冲突的排名
                 "isCorresponding": False,
             },
             {
                 "teacherId": "T002",
-                "paperNum": 1,
                 "publishRank": 1,
                 "isCorresponding": True,
             },

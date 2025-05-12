@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -27,12 +25,28 @@ public class PaperServiceImpl implements PaperService {
 
     @Override
     @Transactional
-    public void addPaper(PaperDTO paper, List<PublishPaperDTO> authors) {
-        validatePaper(paper, authors);
-        paperMapper.insertPaper(paper);
+    public Map<String, Object> addPaper(PaperDTO paper, List<PublishPaperDTO> authors) {
+        // 使用工厂方法生成带有自动生成序号的 PaperDTO
+        PaperDTO newPaper = PaperDTO.createWithoutNum(paper);
+    
+        // 验证论文和作者信息
+        validatePaper(newPaper, authors);
+    
+        // 插入论文信息
+        paperMapper.insertPaper(newPaper);
+    
+        // 插入作者信息
         for (PublishPaperDTO author : authors) {
+            author.setPaperNum(newPaper.getPaperNum()); // 设置作者关联的论文序号
             paperMapper.insertAuthor(author);
         }
+    
+        // 构造返回结果
+        Map<String, Object> result = new HashMap<>();
+        result.put("paper", newPaper); // 插入的论文信息
+        result.put("authors", authors); // 插入的作者信息
+    
+        return result;
     }
 
     @Override
