@@ -9,6 +9,31 @@ BASE_URL = "http://localhost:8080/api"
 current_year = datetime.datetime.now().year
 year_choices = [str(year) for year in range(1970, current_year + 1)]
 
+pp_type = {
+    "Full Paper": 1,
+    "Short Paper": 2,
+    "Poster Paper": 3,
+    "Demo Paper": 4,
+}
+pp_type_keys = list(pp_type.keys())
+
+pp_rank = {
+    "CCF-A": 1,
+    "CCF-B": 2,
+    "CCF-C": 3,
+    "中文CCF-A": 4,
+    "中文CCF-B": 5,
+    "无级别": 6,
+}
+pp_rank_keys = list(pp_rank.keys())
+
+
+def getValue(mMap, key):
+    """
+    前端应对制杖Jackson的方法
+    """
+    return mMap.get(key, 1) - 1
+
 
 # 论文登记功能
 def add_paper(paper_name, paper_src, paper_year, paper_type, paper_rank, authors):
@@ -22,8 +47,8 @@ def add_paper(paper_name, paper_src, paper_year, paper_type, paper_rank, authors
             "paperName": paper_name,
             "paperSrc": paper_src,
             "paperYear": formatted_year,
-            "paperType": paper_type,  # 直接传递整数值
-            "paperRank": paper_rank,  # 直接传递整数值
+            "paperType": getValue(pp_type, paper_type),
+            "paperRank": getValue(pp_rank, paper_rank),
         },
         "authors": authors,
     }
@@ -181,15 +206,15 @@ with gr.Blocks() as demo:
         paper_year = gr.Dropdown(
             choices=year_choices, label="发表年份"
         )  # 修改为下拉框选择
-        paper_type = gr.Dropdown(choices=["1", "2", "3", "4"], label="论文类型")
-        paper_rank = gr.Dropdown(
-            choices=["1", "2", "3", "4", "5", "6"], label="论文级别"
-        )
+        paper_type = gr.Dropdown(choices=pp_type_keys, label="论文类型")
+        paper_rank = gr.Dropdown(choices=pp_rank_keys, label="论文级别")
 
         # 动态表单：作者信息
         with gr.Row():
             teacher_id = gr.Textbox(label="教师工号")
-            publish_rank = gr.Number(label="作者排名")
+            publish_rank = gr.Dropdown(
+                choices=["1", "2", "3", "4", "5", "6", "7"], label="作者排名"
+            )  # 修改为下拉框选择
             is_corresponding = gr.Checkbox(label="是否通讯作者")
             add_author_btn = gr.Button("添加作者")
 
@@ -202,7 +227,7 @@ with gr.Blocks() as demo:
         def add_author(teacher_id, publish_rank, is_corresponding, authors_list):
             new_author = {
                 "teacherId": teacher_id,
-                "publishRank": publish_rank,
+                "publishRank": int(publish_rank),  # 转换为整数值
                 "isCorresponding": is_corresponding,
             }
             authors_list.append(new_author)

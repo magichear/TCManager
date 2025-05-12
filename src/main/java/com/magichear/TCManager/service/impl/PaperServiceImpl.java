@@ -109,8 +109,20 @@ public class PaperServiceImpl implements PaperService {
             }
         }
     
+        // 如果没有设置通讯作者，自动将排名第一的作者设置为通讯作者
         if (!hasCorrespondingAuthor) {
-            throw new IllegalArgumentException("No corresponding author found for paperNum: " + paper.getPaperNum());
+            for (PublishPaperDTO author : authors) {
+                if (author.getPublishRank() == 1) {
+                    author.setIsCorresponding(true); // 设置为通讯作者
+                    hasCorrespondingAuthor = true;
+                    break;
+                }
+            }
+    
+            // 如果没有找到排名第一的作者，抛出异常（理论上不应该发生）
+            if (!hasCorrespondingAuthor) {
+                throw new IllegalArgumentException("No corresponding author found or no author with rank 1 for paperNum: " + paper.getPaperNum());
+            }
         }
     }
 }
