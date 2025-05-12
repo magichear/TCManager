@@ -15,7 +15,87 @@ with gr.Blocks() as demo:
         with gr.Tabs():  # 创建下级标签页
             # 新增三个同级空白标签页
             with gr.Tab("修改"):
-                gr.Textbox(label="修改功能待实现", interactive=False)
+                paper_num = gr.Number(label="论文序号", precision=0)
+                paper_name = gr.Textbox(label="论文名称")
+                paper_src = gr.Textbox(label="发表源")
+                paper_year = gr.Dropdown(choices=Config.year_choices, label="发表年份")
+                paper_type = gr.Dropdown(choices=Config.pp_type_keys, label="论文类型")
+                paper_rank = gr.Dropdown(choices=Config.pp_rank_keys, label="论文级别")
+
+                # 动态表单：作者信息
+                with gr.Row():
+                    teacher_id = gr.Textbox(label="教师工号")
+                    publish_rank = gr.Dropdown(
+                        choices=["1", "2", "3", "4", "5", "6", "7"], label="作者排名"
+                    )
+                    is_corresponding = gr.Checkbox(label="是否通讯作者")
+                    add_author_btn = gr.Button("添加作者")
+
+                authors_list = gr.State([])  # 用于存储作者信息的状态
+                authors_display = gr.Textbox(
+                    label="作者列表", interactive=False, lines=5
+                )
+
+                # 添加作者到列表
+                def add_author(
+                    teacher_id, publish_rank, is_corresponding, authors_list
+                ):
+                    new_author = {
+                        "teacherId": teacher_id,
+                        "publishRank": int(publish_rank),
+                        "isCorresponding": is_corresponding,
+                    }
+                    authors_list.append(new_author)
+                    return authors_list, format_authors(authors_list)
+
+                # 格式化作者列表为美观的字符串
+                def format_authors(authors_list):
+                    formatted = []
+                    for idx, author in enumerate(authors_list):
+                        corresponding = "是" if author["isCorresponding"] else "否"
+                        formatted.append(
+                            f"{idx + 1}. 工号: {author['teacherId']}, 排名: {author['publishRank']}, 通讯作者: {corresponding}"
+                        )
+                    return "\n".join(formatted)
+
+                add_author_btn.click(
+                    add_author,
+                    inputs=[teacher_id, publish_rank, is_corresponding, authors_list],
+                    outputs=[authors_list, authors_display],
+                )
+
+                # 删除作者
+                def delete_author(index, authors_list):
+                    if 0 <= index < len(authors_list):
+                        authors_list.pop(index)
+                    return authors_list, format_authors(authors_list)
+
+                delete_index = gr.Number(label="删除作者索引（从1开始）", precision=0)
+                delete_author_btn = gr.Button("删除作者")
+
+                delete_author_btn.click(
+                    delete_author,
+                    inputs=[delete_index, authors_list],
+                    outputs=[authors_list, authors_display],
+                )
+
+                # 提交修改
+                submit_btn = gr.Button("提交修改")
+                result = gr.Textbox(label="修改结果", lines=10)
+
+                submit_btn.click(
+                    paper_manager.update_paper,
+                    inputs=[
+                        paper_num,
+                        paper_name,
+                        paper_src,
+                        paper_year,
+                        paper_type,
+                        paper_rank,
+                        authors_list,
+                    ],
+                    outputs=result,
+                )
 
             with gr.Tab("删除"):
                 paper_num_input = gr.Number(label="论文序号", precision=0)

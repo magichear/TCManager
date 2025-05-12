@@ -53,10 +53,19 @@ public class PaperServiceImpl implements PaperService {
     @Override
     @Transactional
     public void updatePaper(PaperDTO paper, List<PublishPaperResponseDTO> authors) {
-        validatePaper(paper, authors);
-        paperMapper.updatePaper(paper);
+        // 删除对应论文的所有信息
         paperMapper.deleteAuthor(paper.getPaperNum(), null);
+        paperMapper.deletePaper(paper.getPaperNum());
+    
+        // 验证论文和作者信息
+        validatePaper(paper, authors);
+    
+        // 插入新的论文信息
+        paperMapper.insertPaper(paper);
+    
+        // 插入新的作者信息
         for (PublishPaperResponseDTO author : authors) {
+            author.setPaperNum(paper.getPaperNum()); // 设置作者关联的论文序号
             paperMapper.insertAuthor(author);
         }
     }

@@ -37,4 +37,8 @@ public class PaperDTO {
     public static PaperDTO createWithoutNum(PaperDTO paper) {
         return new PaperDTO(IdUtils.generateIntegerId(), paper.getPaperName(), paper.getPaperSrc(), paper.getPaperYear(), paper.getPaperType(), paper.getPaperRank());
     }
+    // 工厂方法：用于更新论文信息（序号不变）
+    public static PaperDTO createWithAllParams(Integer paperNum, String paperName, String paperSrc, Date paperYear, PaperType paperType, PaperRank paperRank) {
+        return new PaperDTO(paperNum, paperName, paperSrc, paperYear, paperType, paperRank);
+    }
 }

@@ -57,20 +57,36 @@ class PaperManager:
         paper_rank,
         authors,
     ):
+        """
+        修改论文信息
+        """
         url = f"{self.base_url}/papers"
+
+        # 确保年份格式为 "yyyy-01-01"
+        formatted_year = f"{paper_year}-01-01"
+
         paper_request = {
             "paper": {
-                "paperNum": paper_num,
+                "paperNum": int(paper_num),
                 "paperName": paper_name,
                 "paperSrc": paper_src,
-                "paperYear": paper_year,
-                "paperType": paper_type,  # 修改为直接传递整数值
-                "paperRank": paper_rank,  # 修改为直接传递整数值
+                "paperYear": formatted_year,
+                "paperType": self.get_value(Config.pp_type, paper_type),
+                "paperRank": self.get_value(Config.pp_rank, paper_rank),
             },
             "authors": authors,
         }
-        response = requests.put(url, json=paper_request)
-        return response.json()
+
+        try:
+            response = requests.put(url, json=paper_request)
+            if response.status_code == 200:
+                return f"论文序号 {paper_num} 修改成功！"
+            elif response.status_code == 404:
+                return f"论文序号 {paper_num} 不存在，无法修改。"
+            else:
+                return f"修改失败: {response.status_code} - {response.text}"
+        except Exception as e:
+            return f"修改时发生错误: {str(e)}"
 
     def delete_paper(self, paper_num):
         """
