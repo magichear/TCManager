@@ -1,260 +1,152 @@
 import gradio as gr
-import requests
-import datetime
+from PaperManager import PaperManager
+from LectureManager import LectureManager
+from ProjectManager import ProjectManager
+from Config import Config
 
-# 后端 API 基础 URL
-BASE_URL = "http://localhost:8080/api"
-
-# 动态生成年份选项
-current_year = datetime.datetime.now().year
-year_choices = [str(year) for year in range(1970, current_year + 1)]
-
-pp_type = {
-    "Full Paper": 1,
-    "Short Paper": 2,
-    "Poster Paper": 3,
-    "Demo Paper": 4,
-}
-pp_type_keys = list(pp_type.keys())
-
-pp_rank = {
-    "CCF-A": 1,
-    "CCF-B": 2,
-    "CCF-C": 3,
-    "中文CCF-A": 4,
-    "中文CCF-B": 5,
-    "无级别": 6,
-}
-pp_rank_keys = list(pp_rank.keys())
-
-
-def getValue(mMap, key):
-    """
-    前端应对制杖Jackson的方法
-    """
-    return mMap.get(key, 1) - 1
-
-
-# 论文登记功能
-def add_paper(paper_name, paper_src, paper_year, paper_type, paper_rank, authors):
-    url = f"{BASE_URL}/papers"
-
-    # 确保年份格式为 "yyyy-01-01"
-    formatted_year = f"{paper_year}-01-01"
-
-    paper_request = {
-        "paper": {
-            "paperName": paper_name,
-            "paperSrc": paper_src,
-            "paperYear": formatted_year,
-            "paperType": getValue(pp_type, paper_type),
-            "paperRank": getValue(pp_rank, paper_rank),
-        },
-        "authors": authors,
-    }
-
-    response = requests.post(url, json=paper_request)
-    if response.status_code == 200:
-        data = response.json()
-        paper_info = data.get("paper", {})
-        authors_info = data.get("authors", [])
-        return f"论文信息:\n{paper_info}\n\n作者信息:\n{authors_info}\n\n [DEBUG] {paper_year}"
-    else:
-        return f"提交失败: {response.status_code} - {response.text}"
-
-
-def update_paper(
-    paper_num, paper_name, paper_src, paper_year, paper_type, paper_rank, authors
-):
-    url = f"{BASE_URL}/papers"
-    paper_request = {
-        "paper": {
-            "paperNum": paper_num,
-            "paperName": paper_name,
-            "paperSrc": paper_src,
-            "paperYear": paper_year,
-            "paperType": paper_type,  # 修改为直接传递整数值
-            "paperRank": paper_rank,  # 修改为直接传递整数值
-        },
-        "authors": authors,
-    }
-    response = requests.put(url, json=paper_request)
-    return response.json()
-
-
-def delete_paper(paper_num):
-    url = f"{BASE_URL}/papers/{paper_num}"
-    response = requests.delete(url)
-    return response.json()
-
-
-def get_paper(paper_num):
-    url = f"{BASE_URL}/papers/{paper_num}"
-    response = requests.get(url)
-    return response.json()
-
-
-# 项目登记功能
-def add_project(
-    proj_name,
-    proj_src,
-    proj_type,
-    proj_balance,
-    proj_start_year,
-    proj_end_year,
-    charges,
-):
-    url = f"{BASE_URL}/projects"
-    project_request = {
-        "project": {
-            "projName": proj_name,
-            "projSrc": proj_src,
-            "projType": proj_type,  # 修改为直接传递整数值
-            "projBalance": proj_balance,
-            "projStartYear": proj_start_year,
-            "projEndYear": proj_end_year,
-        },
-        "charges": charges,
-    }
-    response = requests.post(url, json=project_request)
-    return response.json()
-
-
-def update_project(
-    proj_id,
-    proj_name,
-    proj_src,
-    proj_type,
-    proj_balance,
-    proj_start_year,
-    proj_end_year,
-    charges,
-):
-    url = f"{BASE_URL}/projects"
-    project_request = {
-        "project": {
-            "projId": proj_id,
-            "projName": proj_name,
-            "projSrc": proj_src,
-            "projType": proj_type,  # 修改为直接传递整数值
-            "projBalance": proj_balance,
-            "projStartYear": proj_start_year,
-            "projEndYear": proj_end_year,
-        },
-        "charges": charges,
-    }
-    response = requests.put(url, json=project_request)
-    return response.json()
-
-
-def delete_project(proj_id):
-    url = f"{BASE_URL}/projects/{proj_id}"
-    response = requests.delete(url)
-    return response.json()
-
-
-def get_project(proj_id):
-    url = f"{BASE_URL}/projects/{proj_id}"
-    response = requests.get(url)
-    return response.json()
-
-
-# 主讲课程登记功能
-def add_lecture(teacher_id, course_id, lecture_year, lecture_term, lecture_hour):
-    url = f"{BASE_URL}/courses"
-    lecture = {
-        "teacherId": teacher_id,
-        "courseId": course_id,
-        "lectureYear": lecture_year,
-        "lectureTerm": lecture_term,  # 修改为直接传递整数值
-        "lectureHour": lecture_hour,
-    }
-    response = requests.post(url, json=lecture)
-    return response.json()
-
-
-def update_lecture(teacher_id, course_id, lecture_year, lecture_term, lecture_hour):
-    url = f"{BASE_URL}/courses"
-    lecture = {
-        "teacherId": teacher_id,
-        "courseId": course_id,
-        "lectureYear": lecture_year,
-        "lectureTerm": lecture_term,  # 修改为直接传递整数值
-        "lectureHour": lecture_hour,
-    }
-    response = requests.put(url, json=lecture)
-    return response.json()
-
-
-def delete_lecture(course_id, teacher_id):
-    url = f"{BASE_URL}/courses/{course_id}/teachers/{teacher_id}"
-    response = requests.delete(url)
-    return response.json()
-
-
-def get_total_lecture_hours(course_id):
-    url = f"{BASE_URL}/courses/{course_id}/total-hours"
-    response = requests.get(url)
-    return response.json()
-
+# 创建 Manager 实例
+paper_manager = PaperManager(Config.BASE_URL)
+lecture_manager = LectureManager(Config.BASE_URL)
+project_manager = ProjectManager(Config.BASE_URL)
 
 # Gradio 界面
 with gr.Blocks() as demo:
     with gr.Tab("登记发表论文情况"):
-        paper_name = gr.Textbox(label="论文名称")
-        paper_src = gr.Textbox(label="发表源")
-        paper_year = gr.Dropdown(
-            choices=year_choices, label="发表年份"
-        )  # 修改为下拉框选择
-        paper_type = gr.Dropdown(choices=pp_type_keys, label="论文类型")
-        paper_rank = gr.Dropdown(choices=pp_rank_keys, label="论文级别")
+        with gr.Tabs():  # 创建下级标签页
+            # 新增三个同级空白标签页
+            with gr.Tab("修改"):
+                gr.Textbox(label="修改功能待实现", interactive=False)
 
-        # 动态表单：作者信息
-        with gr.Row():
-            teacher_id = gr.Textbox(label="教师工号")
-            publish_rank = gr.Dropdown(
-                choices=["1", "2", "3", "4", "5", "6", "7"], label="作者排名"
-            )  # 修改为下拉框选择
-            is_corresponding = gr.Checkbox(label="是否通讯作者")
-            add_author_btn = gr.Button("添加作者")
+            with gr.Tab("删除"):
+                gr.Textbox(label="删除功能待实现", interactive=False)
 
-        authors_list = gr.State([])  # 用于存储作者信息的状态
-        authors_display = gr.Textbox(
-            label="作者列表", interactive=False
-        )  # 显示作者列表
+            with gr.Tab("查询"):
+                query_paper_num = gr.Number(label="论文序号", precision=0)
+                query_btn = gr.Button("查询论文信息")
+                query_result = gr.Textbox(label="查询结果", interactive=False, lines=10)
 
-        # 添加作者到列表
-        def add_author(teacher_id, publish_rank, is_corresponding, authors_list):
-            new_author = {
-                "teacherId": teacher_id,
-                "publishRank": int(publish_rank),  # 转换为整数值
-                "isCorresponding": is_corresponding,
-            }
-            authors_list.append(new_author)
-            return authors_list, str(authors_list)
+                # 查询论文信息的回调函数
+                def query_paper(paper_num):
+                    try:
+                        # 调用 PaperManager 的 get_paper 方法
+                        paper_info = paper_manager.get_paper(int(paper_num))
+                        if not paper_info:
+                            return "未找到对应的论文信息。"
 
-        add_author_btn.click(
-            add_author,
-            inputs=[teacher_id, publish_rank, is_corresponding, authors_list],
-            outputs=[authors_list, authors_display],
-        )
+                        # 获取论文类型和级别，处理 None 的情况
+                        paper_type_index = paper_info.get("paperType")
+                        paper_rank_index = paper_info.get("paperRank")
 
-        # 提交论文信息
-        submit_btn = gr.Button("提交论文")
-        result = gr.Textbox(label="提交结果", lines=10)
+                        paper_type = (
+                            Config.pp_type_keys[paper_type_index - 1]
+                            if paper_type_index is not None and paper_type_index > 0
+                            else "未知类型"
+                        )
+                        paper_rank = (
+                            Config.pp_rank_keys[paper_rank_index - 1]
+                            if paper_rank_index is not None and paper_rank_index > 0
+                            else "未知级别"
+                        )
 
-        submit_btn.click(
-            add_paper,
-            inputs=[
-                paper_name,
-                paper_src,
-                paper_year,
-                paper_type,
-                paper_rank,
-                authors_list,
-            ],
-            outputs=result,
-        )
+                        # 格式化论文信息
+                        formatted_paper_info = (
+                            f"论文序号: {paper_info.get('paperNum')}\n"
+                            f"论文名称: {paper_info.get('paperName')}\n"
+                            f"发表源: {paper_info.get('paperSrc')}\n"
+                            f"发表年份: {paper_info.get('paperYear')}\n"
+                            f"论文类型: {paper_type}\n"
+                            f"论文级别: {paper_rank}"
+                        )
+                        return formatted_paper_info
+                    except Exception as e:
+                        return f"查询失败: {str(e)}"
+
+                query_btn.click(
+                    query_paper,
+                    inputs=[query_paper_num],
+                    outputs=query_result,
+                )
+
+            with gr.Tab("新增"):
+                paper_name = gr.Textbox(label="论文名称")
+                paper_src = gr.Textbox(label="发表源")
+                paper_year = gr.Dropdown(choices=Config.year_choices, label="发表年份")
+                paper_type = gr.Dropdown(choices=Config.pp_type_keys, label="论文类型")
+                paper_rank = gr.Dropdown(choices=Config.pp_rank_keys, label="论文级别")
+
+                # 动态表单：作者信息
+                with gr.Row():
+                    teacher_id = gr.Textbox(label="教师工号")
+                    publish_rank = gr.Dropdown(
+                        choices=["1", "2", "3", "4", "5", "6", "7"], label="作者排名"
+                    )
+                    is_corresponding = gr.Checkbox(label="是否通讯作者")
+                    add_author_btn = gr.Button("添加作者")
+
+                authors_list = gr.State([])  # 用于存储作者信息的状态
+                authors_display = gr.Textbox(
+                    label="作者列表", interactive=False, lines=5
+                )
+
+                # 添加作者到列表
+                def add_author(
+                    teacher_id, publish_rank, is_corresponding, authors_list
+                ):
+                    new_author = {
+                        "teacherId": teacher_id,
+                        "publishRank": int(publish_rank),
+                        "isCorresponding": is_corresponding,
+                    }
+                    authors_list.append(new_author)
+                    return authors_list, format_authors(authors_list)
+
+                # 格式化作者列表为美观的字符串
+                def format_authors(authors_list):
+                    formatted = []
+                    for idx, author in enumerate(authors_list):
+                        corresponding = "是" if author["isCorresponding"] else "否"
+                        formatted.append(
+                            f"{idx + 1}. 工号: {author['teacherId']}, 排名: {author['publishRank']}, 通讯作者: {corresponding}"
+                        )
+                    return "\n".join(formatted)
+
+                add_author_btn.click(
+                    add_author,
+                    inputs=[teacher_id, publish_rank, is_corresponding, authors_list],
+                    outputs=[authors_list, authors_display],
+                )
+
+                # 删除作者
+                def delete_author(index, authors_list):
+                    if 0 <= index < len(authors_list):
+                        authors_list.pop(index)
+                    return authors_list, format_authors(authors_list)
+
+                delete_index = gr.Number(label="删除作者索引（从1开始）", precision=0)
+                delete_author_btn = gr.Button("删除作者")
+
+                delete_author_btn.click(
+                    delete_author,
+                    inputs=[delete_index, authors_list],
+                    outputs=[authors_list, authors_display],
+                )
+
+                # 提交论文信息
+                submit_btn = gr.Button("提交论文")
+                result = gr.Textbox(label="提交结果", lines=10)
+
+                submit_btn.click(
+                    paper_manager.add_paper,
+                    inputs=[
+                        paper_name,
+                        paper_src,
+                        paper_year,
+                        paper_type,
+                        paper_rank,
+                        authors_list,
+                    ],
+                    outputs=result,
+                )
 
     with gr.Tab("登记承担项目情况"):
         proj_name = gr.Textbox(label="项目名称")
@@ -265,8 +157,9 @@ with gr.Blocks() as demo:
         proj_end_year = gr.Number(label="结束年份")
         charges = gr.Textbox(label="承担信息(JSON格式)")
         add_project_btn = gr.Button("添加项目")
+
         add_project_btn.click(
-            add_project,
+            project_manager.add_project,
             inputs=[
                 proj_name,
                 proj_src,
@@ -286,8 +179,9 @@ with gr.Blocks() as demo:
         lecture_term = gr.Dropdown(choices=["1", "2", "3"], label="学期")
         lecture_hour = gr.Number(label="承担学时")
         add_lecture_btn = gr.Button("添加主讲课程")
+
         add_lecture_btn.click(
-            add_lecture,
+            lecture_manager.add_lecture,
             inputs=[teacher_id, course_id, lecture_year, lecture_term, lecture_hour],
             outputs=gr.Textbox(label="结果"),
         )
