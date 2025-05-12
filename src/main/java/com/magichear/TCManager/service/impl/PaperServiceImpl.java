@@ -2,6 +2,7 @@ package com.magichear.TCManager.service.impl;
 
 import com.magichear.TCManager.dto.PaperDTO;
 import com.magichear.TCManager.dto.PublishPaperDTO;
+import com.magichear.TCManager.dto.PublishPaperResponseDTO;
 import com.magichear.TCManager.enums.PaperRank;
 import com.magichear.TCManager.enums.PaperType;
 import com.magichear.TCManager.mapper.PaperMapper;
@@ -25,7 +26,7 @@ public class PaperServiceImpl implements PaperService {
 
     @Override
     @Transactional
-    public Map<String, Object> addPaper(PaperDTO paper, List<PublishPaperDTO> authors) {
+    public Map<String, Object> addPaper(PaperDTO paper, List<PublishPaperResponseDTO> authors) {
         // 使用工厂方法生成带有自动生成序号的 PaperDTO
         PaperDTO newPaper = PaperDTO.createWithoutNum(paper);
     
@@ -36,7 +37,7 @@ public class PaperServiceImpl implements PaperService {
         paperMapper.insertPaper(newPaper);
     
         // 插入作者信息
-        for (PublishPaperDTO author : authors) {
+        for (PublishPaperResponseDTO author : authors) {
             author.setPaperNum(newPaper.getPaperNum()); // 设置作者关联的论文序号
             paperMapper.insertAuthor(author);
         }
@@ -51,11 +52,11 @@ public class PaperServiceImpl implements PaperService {
 
     @Override
     @Transactional
-    public void updatePaper(PaperDTO paper, List<PublishPaperDTO> authors) {
+    public void updatePaper(PaperDTO paper, List<PublishPaperResponseDTO> authors) {
         validatePaper(paper, authors);
         paperMapper.updatePaper(paper);
         paperMapper.deleteAuthor(paper.getPaperNum(), null);
-        for (PublishPaperDTO author : authors) {
+        for (PublishPaperResponseDTO author : authors) {
             paperMapper.insertAuthor(author);
         }
     }
@@ -73,7 +74,40 @@ public class PaperServiceImpl implements PaperService {
     }
 
     @Override
-    public List<PublishPaperDTO> getAuthorsByPaperNum(int paperNum) {
+    public Map<Integer, PublishPaperResponseDTO> getPapersByTeacherId(String teacherId) {
+        // 查询作者发表的所有论文基本信息
+        List<PublishPaperDTO> basicPaperInfoList = paperMapper.selectPapersByTeacherId(teacherId);
+    
+        // 封装结果字典
+        Map<Integer, PublishPaperResponseDTO> result = new HashMap<>();
+        int idx = 0;
+        for (PublishPaperDTO basicInfo : basicPaperInfoList) {
+            // 查询每篇论文的详细信息
+            PaperDTO paper = paperMapper.selectPaperByNum(basicInfo.getPaperNum());
+    
+            if (paper != null) {
+                PublishPaperResponseDTO publishPaperResponseDTO = new PublishPaperResponseDTO(
+                    basicInfo.getTeacherId(), 
+                    paper.getPaperNum(), 
+                    paper.getPaperName(),
+                    paper.getPaperSrc(), 
+                    paper.getPaperYear(), 
+                    paper.getPaperType(), 
+                    paper.getPaperRank(), 
+                    basicInfo.getPublishRank(), 
+                    basicInfo.getIsCorresponding()
+                );
+    
+                result.put(idx, publishPaperResponseDTO);
+                ++idx;
+            }
+        }
+    
+        return result;
+    }
+
+    @Override
+    public List<PublishPaperResponseDTO> getAuthorsByPaperNum(int paperNum) {
         return paperMapper.selectAuthorsByPaperNum(paperNum);
     }
 
@@ -82,7 +116,7 @@ public class PaperServiceImpl implements PaperService {
      * @param paper 论文信息
      * @param authors 作者信息列表
      */
-    private void validatePaper(PaperDTO paper, List<PublishPaperDTO> authors) {
+    private void validatePaper(PaperDTO paper, List<PublishPaperResponseDTO> authors) {
         if (!EnumUtils.isValidEnumValue(PaperType.class, paper.getPaperType().getValue())) {
             throw new IllegalArgumentException("Invalid paper type: " + paper.getPaperType());
         }
@@ -93,7 +127,7 @@ public class PaperServiceImpl implements PaperService {
         boolean hasCorrespondingAuthor = false;
         Set<Integer> publishRanks = new HashSet<>();
     
-        for (PublishPaperDTO author : authors) {
+        for (PublishPaperResponseDTO author : authors) {
             // 检查是否有重复的 publishRank
             if (!publishRanks.add(author.getPublishRank())) {
                 throw new IllegalArgumentException("Duplicate author rank detected in request. PaperNum: " + paper.getPaperNum() +
@@ -111,7 +145,7 @@ public class PaperServiceImpl implements PaperService {
     
         // 如果没有设置通讯作者，自动将排名第一的作者设置为通讯作者
         if (!hasCorrespondingAuthor) {
-            for (PublishPaperDTO author : authors) {
+            for (PublishPaperResponseDTO author : authors) {
                 if (author.getPublishRank() == 1) {
                     author.setIsCorresponding(true); // 设置为通讯作者
                     hasCorrespondingAuthor = true;

@@ -1,7 +1,7 @@
 package com.magichear.TCManager.service;
 
 import com.magichear.TCManager.dto.PaperDTO;
-import com.magichear.TCManager.dto.PublishPaperDTO;
+import com.magichear.TCManager.dto.PublishPaperResponseDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -18,14 +18,14 @@ public interface PaperService {
      * @param paper 论文信息
      * @param authors 作者信息列表
      */
-    Map<String, Object> addPaper(PaperDTO paper, List<PublishPaperDTO> authors);
+    Map<String, Object> addPaper(PaperDTO paper, List<PublishPaperResponseDTO> authors);
 
     /**
      * 更新论文记录
      * @param paper 论文信息
      * @param authors 作者信息列表
      */
-    void updatePaper(PaperDTO paper, List<PublishPaperDTO> authors);
+    void updatePaper(PaperDTO paper, List<PublishPaperResponseDTO> authors);
 
     /**
      * 删除论文记录
@@ -41,9 +41,16 @@ public interface PaperService {
     PaperDTO getPaperByNum(int paperNum);
 
     /**
+     * 按作者ID查询其发表的所有论文信息并封装为嵌套字典
+     * @param teacherId 教师工号
+     * @return 按序号封装的论文信息嵌套字典
+     */
+    Map<Integer, PublishPaperResponseDTO> getPapersByTeacherId(String teacherId);
+
+    /**
      * 按论文序号查询所有作者信息
      * @param paperNum 论文序号
      * @return 作者信息列表
      */
-    List<PublishPaperDTO> getAuthorsByPaperNum(int paperNum);
+    List<PublishPaperResponseDTO> getAuthorsByPaperNum(int paperNum);
 }

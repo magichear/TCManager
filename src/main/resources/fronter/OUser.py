@@ -21,50 +21,17 @@ with gr.Blocks() as demo:
                 gr.Textbox(label="删除功能待实现", interactive=False)
 
             with gr.Tab("查询"):
-                query_paper_num = gr.Number(label="论文序号", precision=0)
-                query_btn = gr.Button("查询论文信息")
-                query_result = gr.Textbox(label="查询结果", interactive=False, lines=10)
+                teacher_id_input = gr.Textbox(
+                    label="教师工号", placeholder="请输入教师工号"
+                )
+                query_btn = gr.Button("查询")
+                query_result = gr.Textbox(label="查询结果", lines=10, interactive=False)
 
-                # 查询论文信息的回调函数
-                def query_paper(paper_num):
-                    try:
-                        # 调用 PaperManager 的 get_paper 方法
-                        paper_info = paper_manager.get_paper(int(paper_num))
-                        if not paper_info:
-                            return "未找到对应的论文信息。"
-
-                        # 获取论文类型和级别，处理 None 的情况
-                        paper_type_index = paper_info.get("paperType")
-                        paper_rank_index = paper_info.get("paperRank")
-
-                        paper_type = (
-                            Config.pp_type_keys[paper_type_index - 1]
-                            if paper_type_index is not None and paper_type_index > 0
-                            else "未知类型"
-                        )
-                        paper_rank = (
-                            Config.pp_rank_keys[paper_rank_index - 1]
-                            if paper_rank_index is not None and paper_rank_index > 0
-                            else "未知级别"
-                        )
-
-                        # 格式化论文信息
-                        formatted_paper_info = (
-                            f"论文序号: {paper_info.get('paperNum')}\n"
-                            f"论文名称: {paper_info.get('paperName')}\n"
-                            f"发表源: {paper_info.get('paperSrc')}\n"
-                            f"发表年份: {paper_info.get('paperYear')}\n"
-                            f"论文类型: {paper_type}\n"
-                            f"论文级别: {paper_rank}"
-                        )
-                        return formatted_paper_info
-                    except Exception as e:
-                        return f"查询失败: {str(e)}"
-
+                # 调用 PaperManager 中的 query_papers_by_teacher 方法
                 query_btn.click(
-                    query_paper,
-                    inputs=[query_paper_num],
-                    outputs=query_result,
+                    paper_manager.query_papers_by_teacher,
+                    inputs=[teacher_id_input],
+                    outputs=[query_result],
                 )
 
             with gr.Tab("新增"):

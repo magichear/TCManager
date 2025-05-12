@@ -2,6 +2,7 @@ package com.magichear.TCManager.mapper;
 
 import com.magichear.TCManager.dto.PaperDTO;
 import com.magichear.TCManager.dto.PublishPaperDTO;
+import com.magichear.TCManager.dto.PublishPaperResponseDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -39,11 +40,18 @@ public interface PaperMapper {
     PaperDTO selectPaperByNum(@Param("paperNum") int paperNum);
 
     /**
+     * 按作者ID查询其发表的所有论文信息
+     * @param teacherId 教师工号
+     * @return 作者发表的论文信息列表
+     */
+    List<PublishPaperDTO> selectPapersByTeacherId(@Param("teacherId") String teacherId);
+
+    /**
      * 插入作者关联信息
      * @param author 作者信息
      * @return 插入的行数
      */
-    int insertAuthor(PublishPaperDTO author);
+    int insertAuthor(PublishPaperResponseDTO author);
 
     /**
      * 删除作者关联信息
@@ -58,7 +66,7 @@ public interface PaperMapper {
      * @param paperNum 论文序号
      * @return 作者列表
      */
-    List<PublishPaperDTO> selectAuthorsByPaperNum(@Param("paperNum") int paperNum);
+    List<PublishPaperResponseDTO> selectAuthorsByPaperNum(@Param("paperNum") int paperNum);
 
     /**
      * 查询某论文是否已有通讯作者

@@ -1,4 +1,6 @@
 package com.magichear.TCManager.enums;
+import org.apache.ibatis.type.MappedTypes;
+
 import com.magichear.TCManager.utils.EnumUtils;
 import lombok.Getter;
 
@@ -6,6 +8,7 @@ import lombok.Getter;
  * 表示论文的级别：1-CCF-A，2-CCF-B，3-CCF-C，4-中文CCF-A，5-中文CCF-B，6-无级别
  */
 @Getter
+@MappedTypes(PaperRank.class)
 public enum PaperRank {
     CCF_A(1),          // CCF-A级
     CCF_B(2),          // CCF-B级

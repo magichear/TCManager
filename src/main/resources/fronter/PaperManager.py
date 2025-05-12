@@ -81,3 +81,35 @@ class PaperManager:
         url = f"{self.base_url}/papers/{paper_num}"
         response = requests.get(url)
         return response.json()
+
+    def query_papers_by_teacher(self, teacher_id):
+        """
+        查询教师发表的论文信息
+        """
+        if not teacher_id.strip():
+            return "教师工号不能为空！"
+
+        url = f"{self.base_url}/papers/authors/{teacher_id}/papers"
+        try:
+            response = requests.get(url)
+            if response.status_code == 200:
+                papers = response.json()
+                if not papers:
+                    return f"教师工号 {teacher_id} 没有发表任何论文。"
+
+                # 格式化论文信息
+                formatted_papers = []
+                for idx, paper in papers.items():
+                    paper_type = paper.get("paperType", "未知类型")  # 直接获取字符串值
+                    paper_rank = paper.get("paperRank", "未知级别")  # 直接获取字符串值
+                    paper_year = paper.get("paperYear", "").split("-")[0]  # 截断年份
+                    formatted_papers.append(
+                        f"{int(idx) + 1}. 论文名称: {paper['paperName']}, 来源: {paper['paperSrc']}, "
+                        f"年份: {paper_year}, 类型: {paper_type}, 级别: {paper_rank}, "
+                        f"排名: {paper['publishRank']}, 通讯作者: {'是' if paper['isCorresponding'] else '否'}"
+                    )
+                return "\n".join(formatted_papers)
+            else:
+                return f"查询失败: {response.status_code} - {response.text}"
+        except Exception as e:
+            return f"查询时发生错误: {str(e)}"

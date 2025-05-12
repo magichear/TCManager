@@ -1,7 +1,7 @@
 package com.magichear.TCManager.controller;
 
 import com.magichear.TCManager.dto.PaperDTO;
-import com.magichear.TCManager.dto.PublishPaperDTO;
+import com.magichear.TCManager.dto.PublishPaperResponseDTO;
 import com.magichear.TCManager.dto.PaperRequestDTO;
 import com.magichear.TCManager.service.PaperService;
 import lombok.RequiredArgsConstructor;
@@ -70,12 +70,22 @@ public class PaperController {
     }
 
     /**
+     * 按作者ID查询其发表的所有论文信息并封装为嵌套字典
+     * @param teacherId 教师工号
+     * @return 按序号封装的论文信息嵌套字典
+     */
+    @GetMapping("/authors/{teacherId}/papers")
+    public Map<Integer, PublishPaperResponseDTO> getPapersByTeacherId(@PathVariable String teacherId) {
+        return paperService.getPapersByTeacherId(teacherId);
+    }
+
+    /**
      * 按论文序号查询所有作者信息
      * @param paperNum 论文序号
      * @return 作者信息列表
      */
     @GetMapping("/{paperNum}/authors")
-    public List<PublishPaperDTO> getAuthorsByPaperNum(@PathVariable int paperNum) {
+    public List<PublishPaperResponseDTO> getAuthorsByPaperNum(@PathVariable int paperNum) {
         return paperService.getAuthorsByPaperNum(paperNum);
     }
 }

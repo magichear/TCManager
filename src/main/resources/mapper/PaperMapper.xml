@@ -30,12 +30,14 @@
     </select>
     <!-- 用resultMap更灵活，可以约定接口，不用跟数据库强相关 -->
     <resultMap id="PaperResultMap" type="com.magichear.TCManager.dto.PaperDTO">
-        <id property="paperNum" column="PAPER_NUM" />
-        <result property="paperName" column="PAPER_NAME" />
-        <result property="paperSrc" column="PAPER_SRC" />
-        <result property="paperYear" column="PAPER_YEAR" />
-        <result property="paperType" column="PAPER_TYPE" javaType="com.magichear.TCManager.enums.PaperType" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler" />
-        <result property="paperRank" column="PAPER_RANK" javaType="com.magichear.TCManager.enums.PaperRank" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler" />
+        <constructor>
+            <idArg column="PAPER_NUM" javaType="java.lang.Integer" />
+            <arg column="PAPER_NAME" javaType="java.lang.String" />
+            <arg column="PAPER_SRC" javaType="java.lang.String" />
+            <arg column="PAPER_YEAR" javaType="java.util.Date" />
+            <arg column="PAPER_TYPE" javaType="com.magichear.TCManager.enums.PaperType" />
+            <arg column="PAPER_RANK" javaType="com.magichear.TCManager.enums.PaperRank" />
+        </constructor>
     </resultMap>
 
 <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
@@ -55,6 +57,24 @@
         </if>
     </delete>
 
+    <!-- 按作者ID查询其发表的所有论文信息 -->
+    <select id="selectPapersByTeacherId" resultMap="TeacherIdResultMap">
+        SELECT 
+            pp.TEACHER_ID, 
+            pp.PAPER_NUM, 
+            pp.PUBLISH_RANK, 
+            pp.PUBLISH_ISCORRESPONDING
+        FROM PUBLISH_PAPERS pp
+        WHERE pp.TEACHER_ID = #{teacherId}
+    </select>
+
+    <resultMap id="TeacherIdResultMap" type="com.magichear.TCManager.dto.PublishPaperDTO">
+        <id property="teacherId" column="TEACHER_ID" />
+        <result property="paperNum" column="PAPER_NUM" />
+        <result property="publishRank" column="PUBLISH_RANK" />
+        <result property="isCorresponding" column="PUBLISH_ISCORRESPONDING" />
+    </resultMap>
+
     <!-- 按论文序号查询所有作者 -->
     <select id="selectAuthorsByPaperNum" resultMap="AuthorResultMap">
         SELECT 
@@ -72,14 +92,14 @@
         WHERE pp.PAPER_NUM = #{paperNum}
     </select>
     
-    <resultMap id="AuthorResultMap" type="com.magichear.TCManager.dto.PublishPaperDTO">
+    <resultMap id="AuthorResultMap" type="com.magichear.TCManager.dto.PublishPaperResponseDTO">
         <id property="teacherId" column="TEACHER_ID" />
         <result property="paperNum" column="PAPER_NUM" />
         <result property="paperName" column="PAPER_NAME" />
         <result property="paperSrc" column="PAPER_SRC" />
         <result property="paperYear" column="PAPER_YEAR" />
-        <result property="paperType" column="PAPER_TYPE" javaType="com.magichear.TCManager.enums.PaperType" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler" />
-        <result property="paperRank" column="PAPER_RANK" javaType="com.magichear.TCManager.enums.PaperRank" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler" />
+        <result property="paperType" column="PAPER_TYPE" javaType="com.magichear.TCManager.enums.PaperType" typeHandler="com.magichear.TCManager.utils.EnumTypeHandler" />
+        <result property="paperRank" column="PAPER_RANK" javaType="com.magichear.TCManager.enums.PaperRank" typeHandler="com.magichear.TCManager.utils.EnumTypeHandler" />
         <result property="publishRank" column="PUBLISH_RANK" />
         <result property="isCorresponding" column="PUBLISH_ISCORRESPONDING" />
     </resultMap>
