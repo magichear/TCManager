@@ -18,7 +18,16 @@ with gr.Blocks() as demo:
                 gr.Textbox(label="修改功能待实现", interactive=False)
 
             with gr.Tab("删除"):
-                gr.Textbox(label="删除功能待实现", interactive=False)
+                paper_num_input = gr.Number(label="论文序号", precision=0)
+                delete_btn = gr.Button("删除论文")
+                delete_result = gr.Textbox(label="删除结果", lines=5, interactive=False)
+
+                # 调用 PaperManager 中的 delete_paper 方法
+                delete_btn.click(
+                    paper_manager.delete_paper,
+                    inputs=[paper_num_input],
+                    outputs=[delete_result],
+                )
 
             with gr.Tab("查询"):
                 teacher_id_input = gr.Textbox(

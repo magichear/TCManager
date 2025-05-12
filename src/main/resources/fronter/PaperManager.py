@@ -73,9 +73,20 @@ class PaperManager:
         return response.json()
 
     def delete_paper(self, paper_num):
-        url = f"{self.base_url}/papers/{paper_num}"
-        response = requests.delete(url)
-        return response.json()
+        """
+        删除论文信息
+        """
+        url = f"{self.base_url}/papers/{int(paper_num)}"
+        try:
+            response = requests.delete(url)
+            if response.status_code == 200:
+                return f"论文序号 {paper_num} 删除成功！"
+            elif response.status_code == 404:
+                return f"论文序号 {paper_num} 不存在，无法删除。"
+            else:
+                return f"删除失败: {response.status_code} - {response.text}"
+        except Exception as e:
+            return f"删除时发生错误: {str(e)}"
 
     def get_paper(self, paper_num):
         url = f"{self.base_url}/papers/{paper_num}"
