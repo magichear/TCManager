@@ -1,8 +1,11 @@
 package com.magichear.TCManager.controller;
 
 import com.magichear.TCManager.dto.Course.LectureCourseDTO;
+import com.magichear.TCManager.dto.Course.LectureCourseResponseDTO;
 import com.magichear.TCManager.service.CourseService;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +27,8 @@ public class CourseController {
      * @param lecture 主讲课程信息
      */
     @PostMapping
-    public void addLecture(@RequestBody LectureCourseDTO lecture) {
-        courseService.addLecture(lecture);
+    public Map<String, Object> addLecture(@RequestBody LectureCourseDTO lecture) {
+        return courseService.addLecture(lecture);
     }
 
     /**
@@ -46,14 +49,13 @@ public class CourseController {
     public void deleteLecture(@PathVariable String courseId, @PathVariable String teacherId) {
         courseService.deleteLecture(courseId, teacherId);
     }
-
     /**
-     * 获取某课程的主讲学时总和
-     * @param courseId 课程号
-     * @return 主讲学时总和
+     * 查询教师的所有主讲课程记录
+     * @param teacherId 教师工号
+     * @return 教师的主讲课程列表
      */
-    @GetMapping("/{courseId}/total-hours")
-    public Integer getTotalLectureHours(@PathVariable String courseId) {
-        return courseService.getTotalLectureHours(courseId);
+    @GetMapping("/teachers/{teacherId}")
+    public Map<Integer, LectureCourseResponseDTO> getLecturesByTeacher(@PathVariable String teacherId) {
+        return courseService.getCoursesByTeacherId(teacherId);
     }
 }

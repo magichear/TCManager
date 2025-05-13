@@ -1,45 +1,61 @@
 package com.magichear.TCManager.mapper;
 
+import com.magichear.TCManager.dto.Course.CourseDTO;
 import com.magichear.TCManager.dto.Course.LectureCourseDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 @Mapper
 public interface CourseMapper {
 
     /**
-     * 查询课程总学时
+     * 插入课程基本信息
+     *
+     * @param course 课程信息
+     */
+    void insertLectureCourse(CourseDTO course);
+
+    /**
+     * 按课程号查询课程信息
+     *
      * @param courseId 课程号
-     * @return 总学时
+     * @return 课程信息
      */
-    Integer selectCourseHours(@Param("courseId") String courseId);
+    CourseDTO selectCourseById(@Param("courseId") String courseId);
 
     /**
-     * 插入主讲课程记录
+     * 插入主讲课程关联信息
      *
      * @param lecture 主讲课程信息
      */
-    void insertLecture(LectureCourseDTO lecture);
+    void insertLectureCourse(LectureCourseDTO lecture);
 
     /**
-     * 更新主讲学时或学期
-     *
-     * @param lecture 主讲课程信息
-     */
-    void updateLecture(LectureCourseDTO lecture);
-
-    /**
-     * 删除主讲课程记录
+     * 删除主讲课程关联信息
      *
      * @param courseId  课程号
      * @param teacherId 教师工号
      */
-    void deleteLecture(@Param("courseId") String courseId, @Param("teacherId") String teacherId);
+    void deleteLectureCourse(@Param("courseId") String courseId, @Param("teacherId") String teacherId);
 
     /**
-     * 计算某课程所有教师的主讲学时总和
-     * @param courseId 课程号
-     * @return 主讲学时总和
+     * 按教师ID查询主讲课程表中的所有相关记录
+     *
+     * @param teacherId 教师工号
+     * @return 主讲课程记录列表
      */
-    Integer calculateTotalLectureHours(@Param("courseId") String courseId);
+    List<LectureCourseDTO> selectLectureCoursesByTeacherId(@Param("teacherId") String teacherId);
+
+    int getCourseHour(@Param("courseId") String courseId);
+
+    int getLectureHour(@Param("courseId") String courseId, @Param("teacherId") String teacherId);
+
+    /**
+     * 更新课程学时数
+     *
+     * @param course 课程信息
+     */
+    void updateCourseHour(String courseId, Integer updatedCourseHour);
 }

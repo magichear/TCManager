@@ -1,6 +1,9 @@
 package com.magichear.TCManager.service;
 
+import java.util.Map;
+
 import com.magichear.TCManager.dto.Course.LectureCourseDTO;
+import com.magichear.TCManager.dto.Course.LectureCourseResponseDTO;
 
 /**
  * 提供教师主讲课程信息的增、删、改、查功能。
@@ -9,10 +12,13 @@ import com.magichear.TCManager.dto.Course.LectureCourseDTO;
 public interface CourseService {
 
     /**
-     * 添加主讲课程记录
+     * 添加主讲课程记录（双方（教师与课程信息）都不允许更改，因此这里无需序号也无需关联其它表）
+     * 
+     * 新增主讲记录之后需要同时维护课程表中的学时信息，删除同理
+     * 
      * @param lecture 主讲课程信息
      */
-    void addLecture(LectureCourseDTO lecture);
+    Map<String, Object> addLecture(LectureCourseDTO lecture);
 
     /**
      * 更新主讲课程记录
@@ -21,16 +27,16 @@ public interface CourseService {
     void updateLecture(LectureCourseDTO lecture);
 
     /**
-     * 删除主讲课程记录
+     * 删除主讲课程记录（同理也仅允许删除中间表）
      * @param courseId 课程号
      * @param teacherId 教师工号
      */
     void deleteLecture(String courseId, String teacherId);
-
+    
     /**
-     * 获取某课程的主讲学时总和
-     * @param courseId 课程号
-     * @return 主讲学时总和
+     * 查询教师主讲的所有课程信息
+     * @param teacherId 教师工号
+     * @return 主讲课程信息列表
      */
-    Integer getTotalLectureHours(String courseId);
+    Map<Integer, LectureCourseResponseDTO> getCoursesByTeacherId(String teacherId);
 }

@@ -6,12 +6,6 @@ class PaperManager:
     def __init__(self, base_url):
         self.base_url = base_url
 
-    def get_value(self, mMap, key):
-        """
-        前端应对制杖Jackson的方法
-        """
-        return mMap.get(key, 1) - 1
-
     def add_paper(
         self, paper_name, paper_src, paper_year, paper_type, paper_rank, authors
     ):
@@ -25,8 +19,8 @@ class PaperManager:
                 "paperName": paper_name,
                 "paperSrc": paper_src,
                 "paperYear": formatted_year,
-                "paperType": self.get_value(Config.pp_type, paper_type),
-                "paperRank": self.get_value(Config.pp_rank, paper_rank),
+                "paperType": Config.get_value(Config.pp_type, paper_type),
+                "paperRank": Config.get_value(Config.pp_rank, paper_rank),
             },
             "authors": authors,
         }
@@ -71,8 +65,8 @@ class PaperManager:
                 "paperName": paper_name,
                 "paperSrc": paper_src,
                 "paperYear": formatted_year,
-                "paperType": self.get_value(Config.pp_type, paper_type),
-                "paperRank": self.get_value(Config.pp_rank, paper_rank),
+                "paperType": Config.get_value(Config.pp_type, paper_type),
+                "paperRank": Config.get_value(Config.pp_rank, paper_rank),
             },
             "authors": authors,
         }

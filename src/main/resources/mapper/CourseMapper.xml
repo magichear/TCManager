@@ -2,40 +2,40 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.magichear.TCManager.mapper.CourseMapper">
 
-    <!-- 插入主讲课程记录 -->
-    <insert id="insertLecture">
+    <!-- 插入主讲课程关联信息 -->
+    <insert id="insertLectureCourse">
         INSERT INTO LECTRUE_COURSE (TEACHER_ID, COURSE_ID, LECTRUE_YEAR, LECTRUE_TERM, LECTRUE_HOUR)
-        VALUES (#{teacherId}, #{courseId}, #{lectureYear}, #{lectureTerm.value}, #{lectureHour})
+        VALUES (#{teacherId}, #{courseId}, #{lectureYear}, #{lectureTerm}, #{lectureHour})
     </insert>
 
-    <!-- 删除主讲课程记录 -->
-    <delete id="deleteLecture">
+    <!-- 删除主讲课程关联信息 -->
+    <delete id="deleteLectureCourse">
         DELETE FROM LECTRUE_COURSE
-        WHERE TEACHER_ID = #{teacherId}
-        <if test="courseId != null">
-            AND COURSE_ID = #{courseId}
+        WHERE COURSE_ID = #{courseId}
+        <if test="teacherId != null">
+            AND TEACHER_ID = #{teacherId}
         </if>
     </delete>
 
-    <!-- 更新主讲学时或学期 -->
-    <update id="updateLecture">
-        UPDATE LECTRUE_COURSE
-        SET LECTRUE_HOUR = #{lectureHour}, LECTRUE_TERM = #{lectureTerm.value}
-        WHERE TEACHER_ID = #{teacherId} AND COURSE_ID = #{courseId}
-    </update>
-
-    <!-- 查询课程总学时 -->
-    <select id="selectCourseHours" resultType="int">
+    <!-- 查询课程的总学时 -->
+    <select id="getCourseHour" resultType="int">
         SELECT COURSE_HOUR
         FROM COURCE
         WHERE COURSE_ID = #{courseId}
     </select>
-
-    <!-- 计算某课程所有教师的主讲学时总和 -->
-    <select id="calculateTotalLectureHours" resultType="int">
-        SELECT SUM(LECTRUE_HOUR)
+    
+    <!-- 查询主讲课程记录的学时 -->
+    <select id="getLectureHour" resultType="int">
+        SELECT LECTRUE_HOUR
         FROM LECTRUE_COURSE
-        WHERE COURSE_ID = #{courseId}
+        WHERE COURSE_ID = #{courseId} AND TEACHER_ID = #{teacherId}
     </select>
+    
+    <!-- 更新课程表的学时信息 -->
+    <update id="updateCourseHour">
+        UPDATE COURCE
+        SET COURSE_HOUR = #{updatedCourseHour}
+        WHERE COURSE_ID = #{courseId}
+    </update>
 
 </mapper>

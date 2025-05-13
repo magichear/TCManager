@@ -68,6 +68,7 @@ public class EnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
 
     private E fromValue(int value) throws SQLException {
         try {
+            System.out.println("EnumTypeHandler: fromValue called with value: " + value);
             return EnumUtils.fromValue(type, value);
         } catch (IllegalArgumentException e) {
             throw new SQLException("Failed to convert value " + value + " to enum " + type.getName(), e);
