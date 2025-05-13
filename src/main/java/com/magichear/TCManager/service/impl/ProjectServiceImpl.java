@@ -2,6 +2,7 @@ package com.magichear.TCManager.service.impl;
 
 import com.magichear.TCManager.dto.Project.InChargeDTO;
 import com.magichear.TCManager.dto.Project.ProjectRequestDTO;
+import com.magichear.TCManager.dto.Project.ProjectResponseDTO;
 import com.magichear.TCManager.dto.Project.ProjectionDTO;
 import com.magichear.TCManager.enums.Project.ProjType;
 import com.magichear.TCManager.mapper.ProjectMapper;
@@ -27,7 +28,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     public Map<String, Object> addProject(ProjectRequestDTO projectRequest) {
         // 使用工厂方法生成带有项目ID的 ProjectionDTO
-        ProjectionDTO newProject = ProjectionDTO.createWithGeneratedId(projectRequest.getProject());
+        ProjectionDTO newProject = ProjectionDTO.createWithoutId(projectRequest.getProject());
 
         // 校验项目合法性
         validateProject(projectRequest);
@@ -84,11 +85,32 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectRequestDTO getProjectByTeacherId(String teacherId) {
-        return new ProjectRequestDTO(
-                null,
-                projectMapper.selectChargesById(null, teacherId)
-        );
+    public Map<Integer, ProjectResponseDTO> getProjectByTeacherId(String teacherId) {
+        // 查询教师的所有承担记录
+        List<InChargeDTO> chargeList = projectMapper.selectChargesById(null, teacherId);
+    
+        // 封装结果字典
+        Map<Integer, ProjectResponseDTO> result = new HashMap<>();
+        int idx = 0;
+    
+        for (InChargeDTO charge : chargeList) {
+            // 根据项目号查询项目详细信息
+            ProjectionDTO project = projectMapper.selectProjectById(charge.getProjId());
+    
+            if (project != null) {
+                // 构造 ProjectResponseDTO
+                ProjectResponseDTO responseDTO = new ProjectResponseDTO(
+                    charge.getChargeRank(),
+                    charge.getChargeBalance(),
+                    project
+                );
+    
+                // 将结果存入字典
+                result.put(idx++, responseDTO);
+            }
+        }
+    
+        return result;
     }
 
     /**

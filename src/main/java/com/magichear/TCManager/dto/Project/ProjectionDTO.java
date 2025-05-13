@@ -23,7 +23,7 @@ public class ProjectionDTO {
      * @param project 项目信息
      * @return 构造好的 ProjectionDTO 对象
      */
-    public static ProjectionDTO createWithGeneratedId(ProjectionDTO project) {
+    public static ProjectionDTO createWithoutId(ProjectionDTO project) {
         // 提取项目信息
         String projName = project.getProjName();
         String projSrc = project.getProjSrc();
@@ -37,7 +37,7 @@ public class ProjectionDTO {
 
         // 构造新的 ProjectionDTO 对象
         ProjectionDTO newProject = new ProjectionDTO();
-        newProject.setProjId(IdUtils.generateStringId(rawData)); // 生成项目ID
+        newProject.setProjId(IdUtils.generateStringId(rawData)); // 根据哈希与时间自动生成项目ID
         newProject.setProjName(projName);
         newProject.setProjSrc(projSrc);
         newProject.setProjType(projType);

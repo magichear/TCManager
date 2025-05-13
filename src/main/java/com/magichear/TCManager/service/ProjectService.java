@@ -3,6 +3,7 @@ package com.magichear.TCManager.service;
 import java.util.Map;
 
 import com.magichear.TCManager.dto.Project.ProjectRequestDTO;
+import com.magichear.TCManager.dto.Project.ProjectResponseDTO;
 
 /**
  * 提供教师承担项目信息的增、删、改、查功能。
@@ -38,5 +39,5 @@ public interface ProjectService {
     /**
      * 按教师工号查询承担信息
      */
-    ProjectRequestDTO getProjectByTeacherId(String teacherId);
+    public Map<Integer, ProjectResponseDTO> getProjectByTeacherId(String teacherId);
 }

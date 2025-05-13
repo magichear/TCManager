@@ -1,6 +1,7 @@
 package com.magichear.TCManager.controller;
 
 import com.magichear.TCManager.dto.Project.ProjectRequestDTO;
+import com.magichear.TCManager.dto.Project.ProjectResponseDTO;
 import com.magichear.TCManager.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 
@@ -66,7 +67,7 @@ public class ProjectController {
      * @return 项目信息及承担信息
      */
     @GetMapping("/teachers/{teacherId}/projects")
-    public ProjectRequestDTO getProjectByTeacherId(@PathVariable String teacherId) {
+    public Map<Integer, ProjectResponseDTO> getProjectByTeacherId(@PathVariable String teacherId) {
         return projectService.getProjectByTeacherId(teacherId);
     }
 }
