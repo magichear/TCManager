@@ -38,4 +38,39 @@
         WHERE COURSE_ID = #{courseId}
     </update>
 
+    <select id="selectLectureCoursesByTeacherId" resultMap="LectureCourseResultMap">
+        SELECT 
+            TEACHER_ID, 
+            COURSE_ID, 
+            LECTRUE_YEAR, 
+            LECTRUE_TERM, 
+            LECTRUE_HOUR
+        FROM LECTRUE_COURSE
+        WHERE TEACHER_ID = #{teacherId}
+    </select>
+
+    <resultMap id="LectureCourseResultMap" type="com.magichear.TCManager.dto.Course.LectureCourseDTO">
+        <id property="teacherId" column="TEACHER_ID" />
+        <result property="courseId" column="COURSE_ID" />
+        <result property="lectureYear" column="LECTRUE_YEAR" />
+        <result property="lectureTerm" column="LECTRUE_TERM" javaType="com.magichear.TCManager.enums.Course.Term" />
+        <result property="lectureHour" column="LECTRUE_HOUR" />
+    </resultMap>
+
+    <select id="selectCourseById" resultMap="CourseResultMap">
+        SELECT 
+            COURSE_ID, 
+            COURSE_NAME, 
+            COURSE_HOUR, 
+            COURSE_TYPE
+        FROM COURCE
+        WHERE COURSE_ID = #{courseId}
+    </select>
+
+    <resultMap id="CourseResultMap" type="com.magichear.TCManager.dto.Course.CourseDTO">
+        <id property="courseId" column="COURSE_ID" />
+        <result property="courseName" column="COURSE_NAME" />
+        <result property="courseHour" column="COURSE_HOUR" />
+        <result property="courseType" column="COURSE_TYPE" javaType="com.magichear.TCManager.enums.Course.CourseType"/>
+    </resultMap>
 </mapper>
