@@ -14,29 +14,22 @@
         WHERE PAPER_NUM = #{paperNum}
     </delete>
 
-    <!-- 更新论文基本信息 -->
-    <update id="updatePaper">
-        UPDATE PAPER
-        SET PAPER_NAME = #{paperName}, PAPER_SRC = #{paperSrc}, PAPER_YEAR = #{paperYear},
-            PAPER_TYPE = #{paperType.value}, PAPER_RANK = #{paperRank.value}
-        WHERE PAPER_NUM = #{paperNum}
-    </update>
-
     <!-- 按序号查询论文 -->
     <select id="selectPaperByNum" resultMap="PaperResultMap">
         SELECT PAPER_NUM, PAPER_NAME, PAPER_SRC, PAPER_YEAR, PAPER_TYPE, PAPER_RANK
         FROM PAPER
         WHERE PAPER_NUM = #{paperNum}
     </select>
+
     <!-- 用resultMap更灵活，可以约定接口，不用跟数据库强相关 -->
-    <resultMap id="PaperResultMap" type="com.magichear.TCManager.dto.PaperDTO">
+    <resultMap id="PaperResultMap" type="com.magichear.TCManager.dto.Paper.PaperDTO">
         <constructor>
             <idArg column="PAPER_NUM" javaType="java.lang.Integer" />
             <arg column="PAPER_NAME" javaType="java.lang.String" />
             <arg column="PAPER_SRC" javaType="java.lang.String" />
             <arg column="PAPER_YEAR" javaType="java.util.Date" />
-            <arg column="PAPER_TYPE" javaType="com.magichear.TCManager.enums.PaperType" />
-            <arg column="PAPER_RANK" javaType="com.magichear.TCManager.enums.PaperRank" />
+            <arg column="PAPER_TYPE" javaType="com.magichear.TCManager.enums.Paper.PaperType" />
+            <arg column="PAPER_RANK" javaType="com.magichear.TCManager.enums.Paper.PaperRank" />
         </constructor>
     </resultMap>
 
@@ -68,7 +61,7 @@
         WHERE pp.TEACHER_ID = #{teacherId}
     </select>
 
-    <resultMap id="TeacherIdResultMap" type="com.magichear.TCManager.dto.PublishPaperDTO">
+    <resultMap id="TeacherIdResultMap" type="com.magichear.TCManager.dto.Paper.PublishPaperDTO">
         <id property="teacherId" column="TEACHER_ID" />
         <result property="paperNum" column="PAPER_NUM" />
         <result property="publishRank" column="PUBLISH_RANK" />
@@ -92,29 +85,16 @@
         WHERE pp.PAPER_NUM = #{paperNum}
     </select>
     
-    <resultMap id="AuthorResultMap" type="com.magichear.TCManager.dto.PublishPaperResponseDTO">
+    <resultMap id="AuthorResultMap" type="com.magichear.TCManager.dto.Paper.PublishPaperResponseDTO">
         <id property="teacherId" column="TEACHER_ID" />
         <result property="paperNum" column="PAPER_NUM" />
         <result property="paperName" column="PAPER_NAME" />
         <result property="paperSrc" column="PAPER_SRC" />
         <result property="paperYear" column="PAPER_YEAR" />
-        <result property="paperType" column="PAPER_TYPE" javaType="com.magichear.TCManager.enums.PaperType" typeHandler="com.magichear.TCManager.utils.EnumTypeHandler" />
-        <result property="paperRank" column="PAPER_RANK" javaType="com.magichear.TCManager.enums.PaperRank" typeHandler="com.magichear.TCManager.utils.EnumTypeHandler" />
+        <result property="paperType" column="PAPER_TYPE" javaType="com.magichear.TCManager.enums.Paper.PaperType" typeHandler="com.magichear.TCManager.utils.EnumTypeHandler" />
+        <result property="paperRank" column="PAPER_RANK" javaType="com.magichear.TCManager.enums.Paper.PaperRank" typeHandler="com.magichear.TCManager.utils.EnumTypeHandler" />
         <result property="publishRank" column="PUBLISH_RANK" />
         <result property="isCorresponding" column="PUBLISH_ISCORRESPONDING" />
     </resultMap>
 
-    <!-- 查询某论文是否已有通讯作者 -->
-    <select id="checkCorrespondingAuthorExist" resultType="boolean">
-        SELECT COUNT(1) > 0
-        FROM PUBLISH_PAPERS
-        WHERE PAPER_NUM = #{paperNum} AND PUBLISH_ISCORRESPONDING = 1
-    </select>
-
-    <!-- 查询某论文是否存在重复排名 -->
-    <select id="checkDuplicateRank" resultType="boolean">
-        SELECT COUNT(1) > 0
-        FROM PUBLISH_PAPERS
-        WHERE PAPER_NUM = #{paperNum} AND PUBLISH_RANK = #{rank}
-    </select>
 </mapper>

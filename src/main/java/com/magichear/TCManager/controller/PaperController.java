@@ -1,8 +1,8 @@
 package com.magichear.TCManager.controller;
 
-import com.magichear.TCManager.dto.PaperDTO;
-import com.magichear.TCManager.dto.PublishPaperResponseDTO;
-import com.magichear.TCManager.dto.PaperRequestDTO;
+import com.magichear.TCManager.dto.Paper.PaperDTO;
+import com.magichear.TCManager.dto.Paper.PublishPaperResponseDTO;
+import com.magichear.TCManager.dto.Paper.PaperRequestDTO;
 import com.magichear.TCManager.service.PaperService;
 import lombok.RequiredArgsConstructor;
 

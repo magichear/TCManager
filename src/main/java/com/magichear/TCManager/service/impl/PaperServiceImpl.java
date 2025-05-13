@@ -1,10 +1,10 @@
 package com.magichear.TCManager.service.impl;
 
-import com.magichear.TCManager.dto.PaperDTO;
-import com.magichear.TCManager.dto.PublishPaperDTO;
-import com.magichear.TCManager.dto.PublishPaperResponseDTO;
-import com.magichear.TCManager.enums.PaperRank;
-import com.magichear.TCManager.enums.PaperType;
+import com.magichear.TCManager.dto.Paper.PaperDTO;
+import com.magichear.TCManager.dto.Paper.PublishPaperDTO;
+import com.magichear.TCManager.dto.Paper.PublishPaperResponseDTO;
+import com.magichear.TCManager.enums.Paper.PaperRank;
+import com.magichear.TCManager.enums.Paper.PaperType;
 import com.magichear.TCManager.mapper.PaperMapper;
 import com.magichear.TCManager.service.PaperService;
 import com.magichear.TCManager.utils.EnumUtils;

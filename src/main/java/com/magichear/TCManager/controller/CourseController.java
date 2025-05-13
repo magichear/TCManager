@@ -1,6 +1,6 @@
 package com.magichear.TCManager.controller;
 
-import com.magichear.TCManager.dto.LectureCourseDTO;
+import com.magichear.TCManager.dto.Course.LectureCourseDTO;
 import com.magichear.TCManager.service.CourseService;
 import lombok.RequiredArgsConstructor;
 

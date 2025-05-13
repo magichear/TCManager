@@ -1,6 +1,6 @@
 package com.magichear.TCManager.dto.Login;
 
-import com.magichear.TCManager.enums.LoginUserType;
+import com.magichear.TCManager.enums.Login.LoginUserType;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

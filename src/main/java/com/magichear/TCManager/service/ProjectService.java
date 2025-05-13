@@ -1,6 +1,8 @@
 package com.magichear.TCManager.service;
 
-import com.magichear.TCManager.dto.ProjectRequestDTO;
+import java.util.Map;
+
+import com.magichear.TCManager.dto.Project.ProjectRequestDTO;
 
 /**
  * 提供教师承担项目信息的增、删、改、查功能。
@@ -12,7 +14,7 @@ public interface ProjectService {
      * 添加项目记录
      * @param projectRequest 项目信息及承担信息
      */
-    void addProject(ProjectRequestDTO projectRequest);
+    Map<String, Object> addProject(ProjectRequestDTO projectRequest);
 
     /**
      * 删除项目记录

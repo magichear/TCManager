@@ -1,6 +1,6 @@
-package com.magichear.TCManager.dto;
+package com.magichear.TCManager.dto.Project;
 
-import com.magichear.TCManager.enums.ProjType;
+import com.magichear.TCManager.enums.Project.ProjType;
 import com.magichear.TCManager.utils.IdUtils;
 
 import lombok.Data;

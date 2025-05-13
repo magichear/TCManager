@@ -1,7 +1,7 @@
 package com.magichear.TCManager.service.impl;
 
-import com.magichear.TCManager.dto.LectureCourseDTO;
-import com.magichear.TCManager.enums.Term;
+import com.magichear.TCManager.dto.Course.LectureCourseDTO;
+import com.magichear.TCManager.enums.Course.Term;
 import com.magichear.TCManager.mapper.CourseMapper;
 import com.magichear.TCManager.service.CourseService;
 import com.magichear.TCManager.utils.EnumUtils;

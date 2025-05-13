@@ -1,6 +1,6 @@
 package com.magichear.TCManager.mapper;
 
-import com.magichear.TCManager.dto.LectureCourseDTO;
+import com.magichear.TCManager.dto.Course.LectureCourseDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

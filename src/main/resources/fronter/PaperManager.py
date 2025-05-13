@@ -131,7 +131,7 @@ class PaperManager:
                     paper_rank = paper.get("paperRank", "未知级别")  # 直接获取字符串值
                     paper_year = paper.get("paperYear", "").split("-")[0]  # 截断年份
                     formatted_papers.append(
-                        f"{int(idx) + 1}. 论文名称: {paper['paperName']}, 来源: {paper['paperSrc']}, "
+                        f"{int(idx) + 1}. 论文序号: {paper['paperNum']}, 论文名称: {paper['paperName']}, 来源: {paper['paperSrc']}, "
                         f"年份: {paper_year}, 类型: {paper_type}, 级别: {paper_rank}, "
                         f"排名: {paper['publishRank']}, 通讯作者: {'是' if paper['isCorresponding'] else '否'}"
                     )

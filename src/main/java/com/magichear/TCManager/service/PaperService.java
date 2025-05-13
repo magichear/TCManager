@@ -1,7 +1,7 @@
 package com.magichear.TCManager.service;
 
-import com.magichear.TCManager.dto.PaperDTO;
-import com.magichear.TCManager.dto.PublishPaperResponseDTO;
+import com.magichear.TCManager.dto.Paper.PaperDTO;
+import com.magichear.TCManager.dto.Paper.PublishPaperResponseDTO;
 
 import java.util.List;
 import java.util.Map;

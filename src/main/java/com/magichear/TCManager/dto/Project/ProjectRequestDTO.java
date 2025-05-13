@@ -1,6 +1,7 @@
-package com.magichear.TCManager.dto;
+package com.magichear.TCManager.dto.Project;
 
 import java.util.List;
+
 import lombok.Data;
 
 /**

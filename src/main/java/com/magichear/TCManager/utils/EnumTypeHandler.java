@@ -1,5 +1,7 @@
 package com.magichear.TCManager.utils;
 
+import com.magichear.TCManager.enums.Paper.PaperRank;
+import com.magichear.TCManager.enums.Paper.PaperType;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedTypes;
@@ -14,7 +16,7 @@ import java.sql.SQLException;
  *
  * @param <E> 枚举类型
  */
-@MappedTypes({com.magichear.TCManager.enums.PaperType.class, com.magichear.TCManager.enums.PaperRank.class})
+@MappedTypes({PaperType.class, PaperRank.class})
 public class EnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
 
     private final Class<E> type;

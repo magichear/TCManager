@@ -1,6 +1,6 @@
-package com.magichear.TCManager.dto;
+package com.magichear.TCManager.dto.Course;
 
-import com.magichear.TCManager.enums.Term;
+import com.magichear.TCManager.enums.Course.Term;
 import lombok.Data;
 
 /**

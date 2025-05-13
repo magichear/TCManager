@@ -1,6 +1,6 @@
 package com.magichear.TCManager.service;
 
-import com.magichear.TCManager.dto.LectureCourseDTO;
+import com.magichear.TCManager.dto.Course.LectureCourseDTO;
 
 /**
  * 提供教师主讲课程信息的增、删、改、查功能。

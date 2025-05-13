@@ -14,14 +14,6 @@
         WHERE PROJ_ID = #{projId}
     </delete>
 
-    <!-- 更新项目基本信息 -->
-    <update id="updateProject">
-        UPDATE PROJECTION
-        SET PROJ_NAME = #{projName}, PROJ_SRC = #{projSrc}, PROJ_TYPE = #{projType.value},
-            PROJ_BALANCE = #{projBalance}, PROJ_START_YEAR = #{projStartYear}, PROJ_END_YEAR = #{projEndYear}
-        WHERE PROJ_ID = #{projId}
-    </update>
-
     <!-- 按项目号查询项目 -->
     <select id="selectProjectById" resultMap="ProjectResultMap">
         SELECT PROJ_ID, PROJ_NAME, PROJ_SRC, PROJ_TYPE, PROJ_BALANCE, PROJ_START_YEAR, PROJ_END_YEAR
@@ -29,11 +21,11 @@
         WHERE PROJ_ID = #{projId}
     </select>
 
-    <resultMap id="ProjectResultMap" type="com.magichear.TCManager.dto.ProjectionDTO">
+    <resultMap id="ProjectResultMap" type="com.magichear.TCManager.dto.Project.ProjectionDTO">
         <id property="projId" column="PROJ_ID" />
         <result property="projName" column="PROJ_NAME" />
         <result property="projSrc" column="PROJ_SRC" />
-        <result property="projType" column="PROJ_TYPE" javaType="com.magichear.TCManager.enums.ProjType" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler" />
+        <result property="projType" column="PROJ_TYPE" javaType="com.magichear.TCManager.enums.Project.ProjType" />
         <result property="projBalance" column="PROJ_BALANCE" />
         <result property="projStartYear" column="PROJ_START_YEAR" />
         <result property="projEndYear" column="PROJ_END_YEAR" />
@@ -87,7 +79,7 @@
         </if>
     </select>
 
-    <resultMap id="ChargeResultMap" type="com.magichear.TCManager.dto.InChargeDTO">
+    <resultMap id="ChargeResultMap" type="com.magichear.TCManager.dto.Project.InChargeDTO">
         <id property="teacherId" column="TEACHER_ID" />
         <result property="projId" column="PROJ_ID" />
         <result property="chargeRank" column="CHARGE_RANK" />

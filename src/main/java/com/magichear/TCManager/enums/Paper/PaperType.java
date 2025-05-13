@@ -1,4 +1,4 @@
-package com.magichear.TCManager.enums;
+package com.magichear.TCManager.enums.Paper;
 
 import lombok.Getter;
 

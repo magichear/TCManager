@@ -2,7 +2,7 @@ package com.magichear.TCManager.service.impl;
 
 import com.magichear.TCManager.dto.Login.LoginUserDTO;
 import com.magichear.TCManager.dto.Login.LoginResponseDTO;
-import com.magichear.TCManager.enums.LoginUserType;
+import com.magichear.TCManager.enums.Login.LoginUserType;
 import com.magichear.TCManager.service.LoginService;
 
 import org.springframework.stereotype.Service;

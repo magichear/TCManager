@@ -1,4 +1,4 @@
-package com.magichear.TCManager.dto;
+package com.magichear.TCManager.dto.Project;
 
 import lombok.Data;
 

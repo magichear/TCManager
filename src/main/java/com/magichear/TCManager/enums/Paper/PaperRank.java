@@ -1,4 +1,4 @@
-package com.magichear.TCManager.enums;
+package com.magichear.TCManager.enums.Paper;
 import org.apache.ibatis.type.MappedTypes;
 
 import com.magichear.TCManager.utils.EnumUtils;

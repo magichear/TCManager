@@ -1,11 +1,14 @@
 package com.magichear.TCManager.controller;
 
-import com.magichear.TCManager.dto.ProjectRequestDTO;
+import com.magichear.TCManager.dto.Project.ProjectRequestDTO;
 import com.magichear.TCManager.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * 项目控制器
@@ -24,8 +27,9 @@ public class ProjectController {
      * @param projectRequest 项目信息及承担信息
      */
     @PostMapping
-    public void addProject(@RequestBody ProjectRequestDTO projectRequest) {
-        projectService.addProject(projectRequest);
+    public ResponseEntity<Map<String, Object>> addProject(@RequestBody ProjectRequestDTO projectRequest) {
+        Map<String, Object> result = projectService.addProject(projectRequest);
+        return ResponseEntity.ok(result);
     }
 
     /**
@@ -54,5 +58,15 @@ public class ProjectController {
     @GetMapping("/{projId}")
     public ProjectRequestDTO getProjectById(@PathVariable String projId) {
         return projectService.getProjectById(projId);
+    }
+
+    /**
+     * 按教师工号查询其承担的所有项目信息
+     * @param teacherId 教师工号
+     * @return 项目信息及承担信息
+     */
+    @GetMapping("/teachers/{teacherId}/projects")
+    public ProjectRequestDTO getProjectByTeacherId(@PathVariable String teacherId) {
+        return projectService.getProjectByTeacherId(teacherId);
     }
 }

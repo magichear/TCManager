@@ -1,7 +1,7 @@
 package com.magichear.TCManager.mapper;
 
-import com.magichear.TCManager.dto.ProjectionDTO;
-import com.magichear.TCManager.dto.InChargeDTO;
+import com.magichear.TCManager.dto.Project.ProjectionDTO;
+import com.magichear.TCManager.dto.Project.InChargeDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

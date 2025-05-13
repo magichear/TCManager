@@ -1,7 +1,7 @@
-package com.magichear.TCManager.dto;
+package com.magichear.TCManager.dto.Paper;
 
-import com.magichear.TCManager.enums.PaperRank;
-import com.magichear.TCManager.enums.PaperType;
+import com.magichear.TCManager.enums.Paper.PaperRank;
+import com.magichear.TCManager.enums.Paper.PaperType;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
