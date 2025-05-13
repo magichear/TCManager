@@ -50,41 +50,35 @@ project_data = {
 # else:
 #    print("Failed to fetch projects:", response.status_code, response.text)
 ## 3. 更新项目记录
-# updated_project_data = {
-#    "project": {
-#        "projId": "P001",
-#        "projName": "Updated AI Research Project",
-#        "projSrc": "Updated Source",
-#        "projType": {"value": 2},  # 省部级项目
-#        "projBalance": 120000.0,
-#        "projStartYear": 2023,
-#        "projEndYear": 2026,
-#    },
-#    "charges": [
-#        {"teacherId": "T001", "chargeRank": 1, "chargeBalance": 60000.0},
-#        {"teacherId": "T002", "chargeRank": 2, "chargeBalance": 60000.0},
-#    ],
-# }
-# print("\nUpdating project...")
-# response = requests.put(BASE_URL, json=updated_project_data)
-# if response.status_code == 200:
-#    print("Project updated successfully")
-# else:
-#    print("Failed to update project:", response.status_code, response.text)
-#
+updated_project_data = {
+    "project": {
+        "projId": "051310691556a94bf735fb287934a0574022f3ace715036135f89ad466b5a9c5514460",
+        "projName": "Updated AI Research Project",
+        "projSrc": "Updated Source",
+        "projType": 2,
+        "projBalance": 120000.0,
+        "projStartYear": 2023,
+        "projEndYear": 2026,
+    },
+    "charges": [
+        {"teacherId": "T001", "chargeRank": 1, "chargeBalance": 60000.0},
+        {"teacherId": "T002", "chargeRank": 2, "chargeBalance": 60000.0},
+    ],
+}
+print("\nUpdating project...")
+response = requests.put(BASE_URL, json=updated_project_data)
+if response.status_code == 200:
+    print("Project updated successfully")
+else:
+    print("Failed to update project:", response.status_code, response.text)
 ## 4. 删除项目记录
-# print(f"\nDeleting project with ID {proj_id}...")
-# response = requests.delete(f"{BASE_URL}/{proj_id}")
+# print(
+#    f"\nDeleting project with ID 05131031570728509ee747e9c8a4747ca342aa33bfb4597ef29fd8ec232a90d6c830db ..."
+# )
+# response = requests.delete(
+#    f"{BASE_URL}/05131031570728509ee747e9c8a4747ca342aa33bfb4597ef29fd8ec232a90d6c830db"
+# )
 # if response.status_code == 200:
 #    print("Project deleted successfully")
 # else:
 #    print("Failed to delete project:", response.status_code, response.text)
-#
-## 5. 确认删除
-# print(f"\nConfirming deletion of project with ID {proj_id}...")
-# response = requests.get(f"{BASE_URL}/{proj_id}")
-# if response.status_code == 404:
-#    print("Project deletion confirmed: Not Found")
-# else:
-#    print("Project still exists:", response.status_code, response.text)
-#

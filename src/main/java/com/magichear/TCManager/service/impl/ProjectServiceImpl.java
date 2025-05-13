@@ -53,14 +53,14 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public void updateProject(ProjectRequestDTO projectRequest) {
-        // 删除旧的承担记录
-        projectMapper.deleteCharge(projectRequest.getProject().getProjId(), null);
+        // 删除旧的所有内容
+        deleteProject(projectRequest.getProject().getProjId());
 
         // 校验项目合法性
         validateProject(projectRequest);
 
         // 更新项目基本信息
-        projectMapper.updateProject(projectRequest.getProject());
+        projectMapper.insertProject(projectRequest.getProject());
 
         // 插入新的承担记录
         for (InChargeDTO charge : projectRequest.getCharges()) {

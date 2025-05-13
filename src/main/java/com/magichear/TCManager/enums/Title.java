@@ -1,5 +1,7 @@
 package com.magichear.TCManager.enums;
 
+import org.apache.ibatis.type.MappedTypes;
+
 import com.magichear.TCManager.utils.EnumUtils;
 import lombok.Getter;
 
@@ -8,6 +10,7 @@ import lombok.Getter;
  *                8-特任副研究员，9-副研究员，10-特任研究员，11-研究员
  */
 @Getter
+@MappedTypes(Title.class)
 public enum Title {
     POSTDOC(1),                         // 博士后
     ASSISTANT(2),                       // 助教

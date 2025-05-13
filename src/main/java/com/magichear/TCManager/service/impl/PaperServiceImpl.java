@@ -54,8 +54,7 @@ public class PaperServiceImpl implements PaperService {
     @Transactional
     public void updatePaper(PaperDTO paper, List<PublishPaperResponseDTO> authors) {
         // 删除对应论文的所有信息
-        paperMapper.deleteAuthor(paper.getPaperNum(), null);
-        paperMapper.deletePaper(paper.getPaperNum());
+        deletePaper(paper.getPaperNum());
     
         // 验证论文和作者信息
         validatePaper(paper, authors);

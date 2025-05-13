@@ -12,17 +12,17 @@ public interface ProjectMapper {
 
     /**
      * 插入项目基本信息
+     *
      * @param project 项目信息
-     * @return 插入的行数
      */
-    int insertProject(ProjectionDTO project);
+    void insertProject(ProjectionDTO project);
 
     /**
      * 删除项目基本信息
+     *
      * @param projId 项目号
-     * @return 删除的行数
      */
-    int deleteProject(@Param("projId") String projId);
+    void deleteProject(@Param("projId") String projId);
 
     /**
      * 更新项目基本信息
@@ -41,18 +41,18 @@ public interface ProjectMapper {
 
     /**
      * 插入教师承担信息
+     *
      * @param charge 承担信息
-     * @return 插入的行数
      */
-    int insertCharge(InChargeDTO charge);
+    void insertCharge(InChargeDTO charge);
 
     /**
      * 删除教师承担信息
-     * @param projId 项目号
+     *
+     * @param projId    项目号
      * @param teacherId 教师工号
-     * @return 删除的行数
      */
-    int deleteCharge(@Param("projId") String projId, @Param("teacherId") String teacherId);
+    void deleteCharge(@Param("projId") String projId, @Param("teacherId") String teacherId);
 
     /**
      * 按项目号查询所有承担记录

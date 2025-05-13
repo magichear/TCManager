@@ -1,9 +1,11 @@
 package com.magichear.TCManager.utils;
 
-import com.magichear.TCManager.enums.Paper.PaperRank;
-import com.magichear.TCManager.enums.Paper.PaperType;
-import com.magichear.TCManager.enums.Project.ProjType;
+import com.magichear.TCManager.enums.Course.*;
+import com.magichear.TCManager.enums.Login.*;
+import com.magichear.TCManager.enums.Paper.*;
+import com.magichear.TCManager.enums.Project.*;
 
+import com.magichear.TCManager.enums.*;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedTypes;
@@ -14,11 +16,12 @@ import java.sql.SQLException;
 
 /**
  * 通用枚举类型处理器，用于将数据库中的整数值映射到枚举类型。
+ * MappedTypes 注解用于指定该处理器适用于哪些枚举类型（必须先在此注册后使用才有效）
  * 适用于所有实现了 fromValue 方法的枚举。
  *
  * @param <E> 枚举类型
  */
-@MappedTypes({PaperType.class, PaperRank.class, ProjType.class})
+@MappedTypes({PaperType.class, PaperRank.class, ProjType.class, CourseType.class, Term.class, LoginUserType.class, Sex.class, Title.class})
 public class EnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
 
     private final Class<E> type;
