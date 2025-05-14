@@ -16,18 +16,22 @@ class ProjectManager:
         proj_end_year,
         charges,
     ):
+        """
+        添加项目记录
+        """
         url = f"{self.base_url}/projects"
         project_request = {
             "project": {
                 "projName": proj_name,
                 "projSrc": proj_src,
-                "projType": int(proj_type),  # 确保传递整数值
+                "projType": Config.get_value(Config.project_type, proj_type),
                 "projBalance": proj_balance,
                 "projStartYear": proj_start_year,
                 "projEndYear": proj_end_year,
             },
             "charges": charges,
         }
+
         response = requests.post(url, json=project_request)
         if response.status_code == 200:
             data = response.json()
@@ -55,19 +59,23 @@ class ProjectManager:
         proj_end_year,
         charges,
     ):
+        """
+        更新项目记录
+        """
         url = f"{self.base_url}/projects"
         project_request = {
             "project": {
                 "projId": proj_id,
                 "projName": proj_name,
                 "projSrc": proj_src,
-                "projType": int(proj_type),  # 确保传递整数值
+                "projType": Config.get_value(Config.project_type, proj_type),
                 "projBalance": proj_balance,
                 "projStartYear": proj_start_year,
                 "projEndYear": proj_end_year,
             },
             "charges": charges,
         }
+
         try:
             response = requests.put(url, json=project_request)
             if response.status_code == 200:
@@ -80,6 +88,9 @@ class ProjectManager:
             return f"修改时发生错误: {str(e)}"
 
     def delete_project(self, proj_id):
+        """
+        删除项目记录
+        """
         url = f"{self.base_url}/projects/{proj_id}"
         try:
             response = requests.delete(url)
@@ -93,6 +104,9 @@ class ProjectManager:
             return f"删除时发生错误: {str(e)}"
 
     def get_project(self, proj_id):
+        """
+        查询项目记录
+        """
         url = f"{self.base_url}/projects/{proj_id}"
         response = requests.get(url)
         if response.status_code == 200:
@@ -109,3 +123,34 @@ class ProjectManager:
             return f"项目信息:\n{project_info}\n\n承担信息:\n{formatted_charges}"
         else:
             return f"查询失败: {response.status_code} - {response.text}"
+
+    def query_projects_by_teacher(self, teacher_id):
+        """
+        按教师工号查询其承担的所有项目信息
+        """
+        if not teacher_id.strip():
+            return "教师工号不能为空！"
+
+        url = f"{self.base_url}/projects/teachers/{teacher_id}/projects"
+        try:
+            response = requests.get(url)
+            if response.status_code == 200:
+                projects = response.json()
+                if not projects:
+                    return f"教师工号 {teacher_id} 没有承担任何项目。"
+
+                # 格式化项目信息
+                formatted_projects = []
+                for idx, project in projects.items():
+                    formatted_projects.append(
+                        f"{int(idx) + 1}. 项目号: {project['project']['projId']}, 项目名称: {project['project']['projName']}, "
+                        f"来源: {project['project']['projSrc']}, 类型: {project['project']['projType']}, "
+                        f"经费: {project['project']['projBalance']}, 开始年份: {project['project']['projStartYear']}, "
+                        f"结束年份: {project['project']['projEndYear']}, 排名: {project['chargeRank']}, "
+                        f"承担经费: {project['chargeBalance']}"
+                    )
+                return "\n".join(formatted_projects)
+            else:
+                return f"查询失败: {response.status_code} - {response.text}"
+        except Exception as e:
+            return f"查询时发生错误: {str(e)}"

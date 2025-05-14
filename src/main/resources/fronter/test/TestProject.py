@@ -21,34 +21,34 @@ project_data = {
 }
 
 ## 1. 添加项目记录
-# print("Adding project...")
-# response = requests.post(f"{BASE_URL}/project", json=project_data)
-# if response.status_code == 200:
-#    print("Project added successfully:", response.json())
-# else:
-#    print("Failed to add project:", response.status_code, response.text)
+print("Adding project...")
+response = requests.post(f"{BASE_URL}/project", json=project_data)
+if response.status_code == 200:
+    print("Project added successfully:", response.json())
+else:
+    print("Failed to add project:", response.status_code, response.text)
 
 # 2. 查询项目记录
-# teacher_id = project_data["charges"][0]["teacherId"]
-# print(f"\nFetching projects for Teacher ID {teacher_id}...")
-# response = requests.get(f"{BASE_URL}/teachers/{teacher_id}/projects")
-#
-# if response.status_code == 200:
-#    projects = response.json()
-#    print("Projects fetched successfully:")
-#    for idx, project in projects.items():
-#        print(f"Project {idx}:")
-#        print(f"  Charge Rank: {project['chargeRank']}")
-#        print(f"  Charge Balance: {project['chargeBalance']}")
-#        print(f"  Project ID: {project['project']['projId']}")
-#        print(f"  Project Name: {project['project']['projName']}")
-#        print(f"  Project Source: {project['project']['projSrc']}")
-#        print(f"  Project Type: {project['project']['projType']}")
-#        print(f"  Project Balance: {project['project']['projBalance']}")
-#        print(f"  Project Start Year: {project['project']['projStartYear']}")
-#        print(f"  Project End Year: {project['project']['projEndYear']}")
-# else:
-#    print("Failed to fetch projects:", response.status_code, response.text)
+teacher_id = project_data["charges"][0]["teacherId"]
+print(f"\nFetching projects for Teacher ID {teacher_id}...")
+response = requests.get(f"{BASE_URL}/teachers/{teacher_id}/projects")
+
+if response.status_code == 200:
+    projects = response.json()
+    print("Projects fetched successfully:")
+    for idx, project in projects.items():
+        print(f"Project {idx}:")
+        print(f"  Charge Rank: {project['chargeRank']}")
+        print(f"  Charge Balance: {project['chargeBalance']}")
+        print(f"  Project ID: {project['project']['projId']}")
+        print(f"  Project Name: {project['project']['projName']}")
+        print(f"  Project Source: {project['project']['projSrc']}")
+        print(f"  Project Type: {project['project']['projType']}")
+        print(f"  Project Balance: {project['project']['projBalance']}")
+        print(f"  Project Start Year: {project['project']['projStartYear']}")
+        print(f"  Project End Year: {project['project']['projEndYear']}")
+else:
+    print("Failed to fetch projects:", response.status_code, response.text)
 ## 3. 更新项目记录
 updated_project_data = {
     "project": {
@@ -72,13 +72,13 @@ if response.status_code == 200:
 else:
     print("Failed to update project:", response.status_code, response.text)
 ## 4. 删除项目记录
-# print(
-#    f"\nDeleting project with ID 05131031570728509ee747e9c8a4747ca342aa33bfb4597ef29fd8ec232a90d6c830db ..."
-# )
-# response = requests.delete(
-#    f"{BASE_URL}/05131031570728509ee747e9c8a4747ca342aa33bfb4597ef29fd8ec232a90d6c830db"
-# )
-# if response.status_code == 200:
-#    print("Project deleted successfully")
-# else:
-#    print("Failed to delete project:", response.status_code, response.text)
+print(
+    f"\nDeleting project with ID 05131031570728509ee747e9c8a4747ca342aa33bfb4597ef29fd8ec232a90d6c830db ..."
+)
+response = requests.delete(
+    f"{BASE_URL}/05131031570728509ee747e9c8a4747ca342aa33bfb4597ef29fd8ec232a90d6c830db"
+)
+if response.status_code == 200:
+    print("Project deleted successfully")
+else:
+    print("Failed to delete project:", response.status_code, response.text)

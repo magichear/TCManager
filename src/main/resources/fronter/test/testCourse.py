@@ -30,7 +30,7 @@ if response.status_code == 200:
 else:
     print("Failed to add lecture:", response.status_code, response.text)
 
-# # 2. 更新主讲课程记录
+# 2. 更新主讲课程记录
 print("\nUpdating lecture...")
 response = requests.put(BASE_URL, json=updated_lecture_data)
 if response.status_code == 200:
@@ -56,8 +56,7 @@ if response.status_code == 200:
         print(f"  Lecture Hour: {lecture['lectureHour']}")
 else:
     print("Failed to fetch lectures:", response.status_code, response.text)
-
-# 4. 删除主讲课程记录
+## 4. 删除主讲课程记录
 course_id = lecture_data["courseId"]
 teacher_id = lecture_data["teacherId"]
 print(f"\nDeleting lecture for Course ID {course_id} and Teacher ID {teacher_id}...")

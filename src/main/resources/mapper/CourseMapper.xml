@@ -2,10 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.magichear.TCManager.mapper.CourseMapper">
 
-    <!-- 插入主讲课程关联信息 -->
+    <!-- 插入主讲课程关联信息
+         [FIX] 此处 lectureTerm 漏了 '.value'
+     -->
     <insert id="insertLectureCourse">
         INSERT INTO LECTRUE_COURSE (TEACHER_ID, COURSE_ID, LECTRUE_YEAR, LECTRUE_TERM, LECTRUE_HOUR)
-        VALUES (#{teacherId}, #{courseId}, #{lectureYear}, #{lectureTerm}, #{lectureHour})
+        VALUES (#{teacherId}, #{courseId}, #{lectureYear}, #{lectureTerm.value}, #{lectureHour})
     </insert>
 
     <!-- 删除主讲课程关联信息 -->
@@ -53,7 +55,7 @@
         <id property="teacherId" column="TEACHER_ID" />
         <result property="courseId" column="COURSE_ID" />
         <result property="lectureYear" column="LECTRUE_YEAR" />
-        <result property="lectureTerm" column="LECTRUE_TERM" javaType="com.magichear.TCManager.enums.Course.Term" />
+        <result property="lectureTerm" column="LECTRUE_TERM" javaType="com.magichear.TCManager.enums.Course.Term" typeHandler="com.magichear.TCManager.utils.EnumTypeHandler"/>
         <result property="lectureHour" column="LECTRUE_HOUR" />
     </resultMap>
 
@@ -71,6 +73,6 @@
         <id property="courseId" column="COURSE_ID" />
         <result property="courseName" column="COURSE_NAME" />
         <result property="courseHour" column="COURSE_HOUR" />
-        <result property="courseType" column="COURSE_TYPE" javaType="com.magichear.TCManager.enums.Course.CourseType"/>
+        <result property="courseType" column="COURSE_TYPE" javaType="com.magichear.TCManager.enums.Course.CourseType" typeHandler="com.magichear.TCManager.utils.CourseTypeHandler"/>
     </resultMap>
 </mapper>

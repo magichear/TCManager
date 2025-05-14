@@ -1,5 +1,6 @@
 package com.magichear.TCManager.utils;
 
+import com.magichear.TCManager.enums.Course.Term;
 import com.magichear.TCManager.enums.Paper.*;
 import com.magichear.TCManager.enums.Project.*;
 
@@ -18,7 +19,7 @@ import java.sql.SQLException;
  *
  * @param <E> 枚举类型
  */
-@MappedTypes({PaperType.class, PaperRank.class, ProjType.class})
+@MappedTypes({PaperType.class, PaperRank.class, ProjType.class, Term.class})
 public class EnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
 
     private final Class<E> type;
