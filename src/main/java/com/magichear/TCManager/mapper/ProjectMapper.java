@@ -74,5 +74,13 @@ public interface ProjectMapper {
      * @param projId 项目号
      * @return 经费总和
      */
-    Double calculateTotalCharge(@Param("projId") String projId);
+    Double getProjectBalance(@Param("projId") String projId);
+
+    /**
+     * 更新项目总经费
+     *
+     * @param projId 项目号
+     * @param updatedProjBalance 更新后的项目总经费
+     */
+    void updateProjectBalance(@Param("projId") String projId, @Param("updatedProjBalance") Double updatedProjBalance);
 }

@@ -16,7 +16,14 @@
 
     <!-- 按项目号查询项目 -->
     <select id="selectProjectById" resultMap="ProjectResultMap">
-        SELECT PROJ_ID, PROJ_NAME, PROJ_SRC, PROJ_TYPE, PROJ_BALANCE, PROJ_START_YEAR, PROJ_END_YEAR
+        SELECT 
+            PROJ_ID, 
+            PROJ_NAME, 
+            PROJ_SRC, 
+            PROJ_TYPE, 
+            COALESCE(PROJ_BALANCE, 0.0) AS PROJ_BALANCE, 
+            PROJ_START_YEAR, 
+            PROJ_END_YEAR
         FROM PROJECTION
         WHERE PROJ_ID = #{projId}
     </select>
@@ -25,7 +32,7 @@
         <id property="projId" column="PROJ_ID" />
         <result property="projName" column="PROJ_NAME" />
         <result property="projSrc" column="PROJ_SRC" />
-        <result property="projType" column="PROJ_TYPE" javaType="com.magichear.TCManager.enums.Project.ProjType" typeHandler="com.magichear.TCManager.utils.EnumTypeHandler"/>
+        <result property="projType" column="PROJ_TYPE" javaType="com.magichear.TCManager.enums.Project.ProjType" typeHandler="com.magichear.TCManager.utils.ProjTypeHandler"/>
         <result property="projBalance" column="PROJ_BALANCE" />
         <result property="projStartYear" column="PROJ_START_YEAR" />
         <result property="projEndYear" column="PROJ_END_YEAR" />
@@ -95,10 +102,17 @@
           AND TEACHER_ID != #{teacherId}
     </select>
 
-    <!-- 计算某项目所有教师的承担经费总和 -->
-    <select id="calculateTotalCharge" resultType="double">
-        SELECT COALESCE(SUM(CHARGE_BALANCE), 0)
-        FROM IN_CHARGE
+    <!-- 查询某项目经费总和 -->
+    <select id="getProjectBalance" resultType="double">
+        SELECT PROJ_BALANCE
+        FROM PROJECTION
         WHERE PROJ_ID = #{projId}
     </select>
+
+    <!-- 更新项目总经费 -->
+    <update id="updateProjectBalance">
+        UPDATE PROJECTION
+        SET PROJ_BALANCE = #{updatedProjBalance}
+        WHERE PROJ_ID = #{projId}
+    </update>
 </mapper>

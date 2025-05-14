@@ -28,8 +28,8 @@
             <arg column="PAPER_NAME" javaType="java.lang.String" />
             <arg column="PAPER_SRC" javaType="java.lang.String" />
             <arg column="PAPER_YEAR" javaType="java.util.Date" />
-            <arg column="PAPER_TYPE" javaType="com.magichear.TCManager.enums.Paper.PaperType" />
-            <arg column="PAPER_RANK" javaType="com.magichear.TCManager.enums.Paper.PaperRank" />
+            <arg column="PAPER_TYPE" javaType="com.magichear.TCManager.enums.Paper.PaperType" typeHandler="com.magichear.TCManager.utils.PaperTypeHandler" />
+            <arg column="PAPER_RANK" javaType="com.magichear.TCManager.enums.Paper.PaperRank" typeHandler="com.magichear.TCManager.utils.PaperRankHandler" />
         </constructor>
     </resultMap>
 
@@ -91,8 +91,8 @@
         <result property="paperName" column="PAPER_NAME" />
         <result property="paperSrc" column="PAPER_SRC" />
         <result property="paperYear" column="PAPER_YEAR" />
-        <result property="paperType" column="PAPER_TYPE" javaType="com.magichear.TCManager.enums.Paper.PaperType" typeHandler="com.magichear.TCManager.utils.EnumTypeHandler" />
-        <result property="paperRank" column="PAPER_RANK" javaType="com.magichear.TCManager.enums.Paper.PaperRank" typeHandler="com.magichear.TCManager.utils.EnumTypeHandler" />
+        <result property="paperType" column="PAPER_TYPE" javaType="com.magichear.TCManager.enums.Paper.PaperType" typeHandler="com.magichear.TCManager.utils.PaperTypeHandler" />
+        <result property="paperRank" column="PAPER_RANK" javaType="com.magichear.TCManager.enums.Paper.PaperRank" typeHandler="com.magichear.TCManager.utils.PaperRankHandler" />
         <result property="publishRank" column="PUBLISH_RANK" />
         <result property="isCorresponding" column="PUBLISH_ISCORRESPONDING" />
     </resultMap>

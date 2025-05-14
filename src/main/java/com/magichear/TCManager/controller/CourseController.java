@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.*;
 /**
  * 课程控制器
  * 提供主讲课程信息的增、删、改、查功能
+ * 
+ * 查询功能也应该同时支持按教师工号查询其所有课程，以及按课程号查询所有主讲记录
+ * 
+ * 删除界面应该在最上方额外列出所有主讲课程信息
  */
 @RestController
 @RequestMapping("/api/courses")

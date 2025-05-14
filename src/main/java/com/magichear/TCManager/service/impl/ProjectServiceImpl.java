@@ -29,39 +29,43 @@ public class ProjectServiceImpl implements ProjectService {
     public Map<String, Object> addProject(ProjectRequestDTO projectRequest) {
         // 使用工厂方法生成带有项目ID的 ProjectionDTO
         ProjectionDTO newProject = ProjectionDTO.createWithoutId(projectRequest.getProject());
-
-        // 校验项目合法性
-        validateProject(projectRequest);
-
+    
+        // 计算所有教师承担经费的总和并设置到项目中
+        double totalCharge = updateProjectBalance(projectRequest.getCharges());
+        newProject.setProjBalance(totalCharge);
+    
         // 插入项目信息
         projectMapper.insertProject(newProject);
-
+    
         // 插入承担信息
         for (InChargeDTO charge : projectRequest.getCharges()) {
             charge.setProjId(newProject.getProjId()); // 设置项目号
             projectMapper.insertCharge(charge);
         }
-
+    
         // 构造返回结果
         Map<String, Object> result = new HashMap<>();
         result.put("project", newProject); // 插入的项目信息
         result.put("charges", projectRequest.getCharges()); // 插入的承担信息
-
+    
         return result;
     }
-
+    
     @Override
     @Transactional
     public void updateProject(ProjectRequestDTO projectRequest) {
         // 删除旧的所有内容
         deleteProject(projectRequest.getProject().getProjId());
-
-        // 校验项目合法性
-        validateProject(projectRequest);
-
+    
+        // 计算所有教师承担经费的总和并设置到项目中
+        double totalCharge = projectRequest.getCharges().stream()
+            .mapToDouble(InChargeDTO::getChargeBalance)
+            .sum();
+        projectRequest.getProject().setProjBalance(totalCharge);
+    
         // 更新项目基本信息
         projectMapper.insertProject(projectRequest.getProject());
-
+    
         // 插入新的承担记录
         for (InChargeDTO charge : projectRequest.getCharges()) {
             charge.setProjId(projectRequest.getProject().getProjId());
@@ -111,6 +115,25 @@ public class ProjectServiceImpl implements ProjectService {
         }
     
         return result;
+    }
+
+    /**
+     * 更新项目总经费
+     * @param projId 项目号
+     * @param charges 承担信息列表
+     */
+    private double updateProjectBalance(List<InChargeDTO> charges) {
+        // 计算所有教师承担经费的总和
+        double totalCharge = charges.stream()
+            .mapToDouble(InChargeDTO::getChargeBalance)
+            .sum();
+
+        if (totalCharge < 0) {
+            throw new IllegalArgumentException("Total project balance cannot be negative.");
+        }
+
+        // 更新项目总经费
+        return totalCharge;
     }
 
     /**
