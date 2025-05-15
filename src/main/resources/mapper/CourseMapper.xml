@@ -51,11 +51,22 @@
         WHERE TEACHER_ID = #{teacherId}
     </select>
 
+    <select id="selectLectureCoursesByCourseId" resultMap="LectureCourseResultMap">
+        SELECT 
+            TEACHER_ID, 
+            COURSE_ID, 
+            LECTRUE_YEAR, 
+            LECTRUE_TERM, 
+            LECTRUE_HOUR
+        FROM LECTRUE_COURSE
+        WHERE COURSE_ID = #{courseId}
+    </select>
+
     <resultMap id="LectureCourseResultMap" type="com.magichear.TCManager.dto.Course.LectureCourseDTO">
         <id property="teacherId" column="TEACHER_ID" />
         <result property="courseId" column="COURSE_ID" />
         <result property="lectureYear" column="LECTRUE_YEAR" />
-        <result property="lectureTerm" column="LECTRUE_TERM" javaType="com.magichear.TCManager.enums.Course.Term" typeHandler="com.magichear.TCManager.utils.EnumTypeHandler"/>
+        <result property="lectureTerm" column="LECTRUE_TERM" javaType="com.magichear.TCManager.enums.Course.Term" typeHandler="com.magichear.TCManager.utils.TermHandler"/>
         <result property="lectureHour" column="LECTRUE_HOUR" />
     </resultMap>
 

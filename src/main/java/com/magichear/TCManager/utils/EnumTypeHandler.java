@@ -8,66 +8,67 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * 通用枚举类型处理器，用于将数据库中的整数值映射到枚举类型。
- * MappedTypes 注解用于指定该处理器适用于哪些枚举类型（必须先在此注册后使用才有效）
- * 适用于所有实现了 fromValue 方法的枚举。
+ * 通用抽象枚举类型处理器，用于减少重复代码。
  *
  * @param <E> 枚举类型
  */
-public class EnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
+public abstract class EnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
 
     private final Class<E> type;
 
     /**
-     * 带参构造函数，传入枚举类型的 Class 对象。
+     * 构造函数，传入枚举类型的 Class 对象。
      *
      * @param type 枚举类型
      */
-    public EnumTypeHandler(Class<E> type) {
+    protected EnumTypeHandler(Class<E> type) {
         if (type == null) {
             throw new IllegalArgumentException("Type argument cannot be null");
         }
         this.type = type;
     }
 
+    /**
+     * @param value 数据库中的整数值
+     * @return 对应的枚举值
+     */
+    protected abstract E fromValue(int value);
+
+    /**
+     * @param enumValue 枚举值
+     * @return 对应的整数值
+     */
+    protected abstract int toValue(E enumValue);
+
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException {
-        try {
-            int value = (int) type.getMethod("getValue").invoke(parameter);
-            ps.setInt(i, value);
-        } catch (Exception e) {
-            throw new SQLException("Failed to get value from enum: " + parameter, e);
-        }
+        ps.setInt(i, toValue(parameter));
     }
 
     @Override
     public E getNullableResult(ResultSet rs, String columnName) throws SQLException {
         int value = rs.getInt(columnName);
-        try {
-            return fromValue(value);
-        } catch (IllegalArgumentException e) {
-            throw new SQLException("Invalid value for Term enum: " + value, e);
+        if (rs.wasNull()) {
+            return null;
         }
+        return fromValue(value);
     }
 
     @Override
     public E getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
         int value = rs.getInt(columnIndex);
+        if (rs.wasNull()) {
+            return null;
+        }
         return fromValue(value);
     }
 
     @Override
     public E getNullableResult(java.sql.CallableStatement cs, int columnIndex) throws SQLException {
         int value = cs.getInt(columnIndex);
-        return fromValue(value);
-    }
-
-    private E fromValue(int value) throws SQLException {
-        try {
-            System.out.println("EnumTypeHandler: fromValue called with value: " + value);
-            return EnumUtils.fromValue(type, value);
-        } catch (IllegalArgumentException e) {
-            throw new SQLException("Failed to convert value " + value + " to enum " + type.getName(), e);
+        if (cs.wasNull()) {
+            return null;
         }
+        return fromValue(value);
     }
 }

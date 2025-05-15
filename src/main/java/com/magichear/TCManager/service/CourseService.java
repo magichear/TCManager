@@ -1,5 +1,6 @@
 package com.magichear.TCManager.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.magichear.TCManager.dto.Course.LectureCourseDTO;
@@ -39,4 +40,11 @@ public interface CourseService {
      * @return 主讲课程信息列表
      */
     Map<Integer, LectureCourseResponseDTO> getCoursesByTeacherId(String teacherId);
+
+    /**
+     * 查询课程的所有主讲记录
+     * @param courseId 课程号
+     * @return 主讲记录列表
+     */
+    List<LectureCourseDTO> getLecturesByCourseId(String courseId);
 }

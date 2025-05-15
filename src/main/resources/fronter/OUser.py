@@ -581,16 +581,32 @@ with gr.Blocks() as demo:
 
             # 查询主讲课程
             with gr.Tab("查询"):
+                # 按教师工号查询
                 teacher_id_input = gr.Textbox(
                     label="教师工号", placeholder="请输入教师工号"
                 )
-                query_btn = gr.Button("查询")
-                query_result = gr.Textbox(label="查询结果", lines=10, interactive=False)
+                query_teacher_btn = gr.Button("按教师工号查询")
+                query_teacher_result = gr.Textbox(
+                    label="查询结果", lines=10, interactive=False
+                )
 
-                query_btn.click(
+                query_teacher_btn.click(
                     lecture_manager.get_lectures_by_teacher,
                     inputs=[teacher_id_input],
-                    outputs=[query_result],
+                    outputs=[query_teacher_result],
+                )
+
+                # 按课程号查询
+                course_id_input = gr.Textbox(label="课程号", placeholder="请输入课程号")
+                query_course_btn = gr.Button("按课程号查询")
+                query_course_result = gr.Textbox(
+                    label="查询结果", lines=10, interactive=False
+                )
+
+                query_course_btn.click(
+                    lecture_manager.get_lectures_by_course,
+                    inputs=[course_id_input],
+                    outputs=[query_course_result],
                 )
 
             # 新增主讲课程

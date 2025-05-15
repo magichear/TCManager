@@ -80,3 +80,30 @@ class LectureManager:
             return "\n".join(formatted_lectures)
         else:
             return f"查询失败: {response.status_code} - {response.text}"
+
+    def get_lectures_by_course(self, course_id):
+        """
+        查询课程的所有主讲记录
+        """
+        url = f"{self.base_url}/courses/lectures/{course_id}"
+        response = requests.get(url)
+        if response.status_code == 200:
+            lectures = response.json()
+            if not lectures:
+                return f"课程号 {course_id} 没有任何主讲记录。"
+
+            # 格式化课程信息
+            formatted_lectures = []
+            for idx, lecture in enumerate(lectures):
+                teacher_id = lecture.get("teacherId", "未知")
+                lecture_year = lecture.get("lectureYear", "未知")
+                lecture_term = lecture.get("lectureTerm", "未知")
+                lecture_hour = lecture.get("lectureHour", "未知")
+
+                formatted_lectures.append(
+                    f"{idx + 1}. 教师工号: {teacher_id}, 授课年份: {lecture_year}, "
+                    f"授课学期: {lecture_term}, 授课学时: {lecture_hour}"
+                )
+            return "\n".join(formatted_lectures)
+        else:
+            return f"查询失败: {response.status_code} - {response.text}"

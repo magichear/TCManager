@@ -88,6 +88,12 @@ public class CourseServiceImpl implements CourseService {
         return result;
     }
 
+    @Override
+    public List<LectureCourseDTO> getLecturesByCourseId(String courseId) {
+        // 查询主讲课程记录
+        return courseMapper.selectLectureCoursesByCourseId(courseId);
+    }
+
     /**
      * 更新课程表的学时信息
      * @param courseId 课程号

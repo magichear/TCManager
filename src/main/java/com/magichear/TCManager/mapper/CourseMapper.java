@@ -48,6 +48,14 @@ public interface CourseMapper {
      */
     List<LectureCourseDTO> selectLectureCoursesByTeacherId(@Param("teacherId") String teacherId);
 
+    /**
+     * 按课程号查询主讲课程表中的所有相关记录
+     *
+     * @param courseId 课程号
+     * @return 主讲课程记录列表
+     */
+    List<LectureCourseDTO> selectLectureCoursesByCourseId(@Param("courseId") String courseId);
+
     int getCourseHour(@Param("courseId") String courseId);
 
     int getLectureHour(@Param("courseId") String courseId, @Param("teacherId") String teacherId);

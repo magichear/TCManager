@@ -5,6 +5,7 @@ import com.magichear.TCManager.dto.Course.LectureCourseResponseDTO;
 import com.magichear.TCManager.service.CourseService;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
  * 
  * 查询功能也应该同时支持按教师工号查询其所有课程，以及按课程号查询所有主讲记录
  * 
- * 删除界面应该在最上方额外列出所有主讲课程信息
  */
 @RestController
 @RequestMapping("/api/courses")
@@ -61,5 +61,15 @@ public class CourseController {
     @GetMapping("/teachers/{teacherId}")
     public Map<Integer, LectureCourseResponseDTO> getLecturesByTeacher(@PathVariable String teacherId) {
         return courseService.getCoursesByTeacherId(teacherId);
+    }
+
+    /**
+     * 查询课程的所有主讲记录
+     * @param courseId 课程号
+     * @return 主讲记录列表
+     */
+    @GetMapping("/lectures/{courseId}")
+    public List<LectureCourseDTO> getLecturesByCourse(@PathVariable String courseId) {
+        return courseService.getLecturesByCourseId(courseId);
     }
 }
