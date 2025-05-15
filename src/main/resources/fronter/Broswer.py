@@ -1,11 +1,14 @@
 import gradio as gr
 import requests
+from OUser import get_regular_user_interface  # 导入普通用户界面函数
 
 # 后端登录接口地址
 LOGIN_API_URL = "http://localhost:8080/api/login"
+NOT_FOUND_API_URL = "http://localhost:8080/api/login/404"  # 后端 404 页面接口
 
 # 定义全局变量存储用户权限级别
 user_permission_level = None
+has_switched_to_regular_user = False  # 标记是否已从管理员页面跳转到普通用户页面
 
 
 # 登录函数
@@ -18,25 +21,33 @@ def login(username, password):
         response = requests.post(LOGIN_API_URL, json=login_data)
         if response.status_code == 200:
             result = response.json()
-            if "登录成功" in result["message"]:
-                # 根据返回的用户类型设置权限级别
-                user_type = result["data"]
-                if user_type == "SUPER_USER":
-                    user_permission_level = 1
-                elif user_type == "REGULAR_USER":
-                    user_permission_level = 2
-                elif user_type == "GUEST":
-                    user_permission_level = 3
-                return (
-                    gr.update(visible=False),
-                    gr.update(visible=True),
-                    f"登录成功！您的权限级别为：{user_permission_level}",
-                )
+            print("[DEBUG] 后端返回的数据：", result)
+            if "message" in result and "role" in result:
+                if "登录成功" in result["message"]:
+                    # 根据返回的用户类型设置权限级别
+                    user_role = result["role"]
+                    if user_role == "SUPER_USER":
+                        user_permission_level = 1
+                    elif user_role == "REGULAR_USER":
+                        user_permission_level = 2
+                    elif user_role == "GUEST":
+                        user_permission_level = 3
+                    return (
+                        gr.update(visible=False),
+                        gr.update(visible=True),
+                        f"登录成功！您的权限级别为：{user_permission_level}",
+                    )
+                else:
+                    return (
+                        gr.update(visible=True),
+                        gr.update(visible=False),
+                        "登录失败：" + result["message"],
+                    )
             else:
                 return (
                     gr.update(visible=True),
                     gr.update(visible=False),
-                    "登录失败：" + result["message"],
+                    "登录失败：后端返回数据格式错误",
                 )
         else:
             return (
@@ -48,71 +59,106 @@ def login(username, password):
         return gr.update(visible=True), gr.update(visible=False), f"登录失败：{str(e)}"
 
 
-# 构建 Gradio 界面
-with gr.Blocks() as demo:
-    # 登录页面
-    with gr.Row(visible=True) as login_page:
-        gr.Markdown("### 用户登录系统")
-        username = gr.Textbox(label="用户名")
-        password = gr.Textbox(label="密码", type="password")
-        login_button = gr.Button("登录")
-        login_output = gr.Textbox(label="登录结果", interactive=False)
+# 获取 404 页面内容
+def get_404_page():
+    try:
+        response = requests.get(NOT_FOUND_API_URL)
+        if response.status_code == 404:
+            return response.text  # 返回 404 页面内容
+        else:
+            return f"无法加载 404 页面，HTTP 状态码：{response.status_code}"
+    except Exception as e:
+        return f"加载 404 页面失败：{str(e)}"
 
-    # 资源页面
-    with gr.Row(visible=False) as resource_page:
-        gr.Markdown("### 资源页面")
-        with gr.Tab("Tab 1", visible=False) as tab1:
-            gr.Markdown("这是 Tab 1 的内容")
-        with gr.Tab("Tab 2", visible=False) as tab2:
-            gr.Markdown("这是 Tab 2 的内容")
-        with gr.Tab("Tab 3", visible=False) as tab3:
-            gr.Markdown("这是 Tab 3 的内容")
 
-    # 登录按钮点击事件
-    def handle_login(username, password):
-        global user_permission_level
-        login_result = login(username, password)
-        if user_permission_level == 1:  # 超级用户
-            return (
-                login_result[0],
-                login_result[1],
-                login_result[2],
-                gr.update(visible=True),
-                gr.update(visible=True),
-                gr.update(visible=True),
-            )
-        elif user_permission_level == 2:  # 普通用户
-            return (
-                login_result[0],
-                login_result[1],
-                login_result[2],
-                gr.update(visible=True),
-                gr.update(visible=True),
-                gr.update(visible=False),
-            )
-        elif user_permission_level == 3:  # 访客
-            return (
-                login_result[0],
-                login_result[1],
-                login_result[2],
-                gr.update(visible=True),
-                gr.update(visible=False),
-                gr.update(visible=False),
-            )
-        else:  # 登录失败或未登录
-            return (
-                login_result[0],
-                login_result[1],
-                login_result[2],
-                gr.update(visible=False),
-                gr.update(visible=False),
-                gr.update(visible=False),
+# 主界面
+def main_interface():
+    global has_switched_to_regular_user
+
+    with gr.Blocks() as demo:
+        # 主界面
+        with gr.Row(visible=False) as main_view:
+            # 根据权限级别动态显示内容
+            admin_view = gr.Column(visible=False)
+            regular_user_view = gr.Column(visible=False)
+            guest_view = gr.Column(visible=False)  # 访客界面
+
+            # 管理员页面
+            with admin_view:
+                gr.Textbox(label="管理员页面：这里可以展示所有用户的资源")
+
+                # 添加跳转按钮
+                def switch_to_regular_user():
+                    global has_switched_to_regular_user
+                    has_switched_to_regular_user = True
+                    return gr.update(visible=False), gr.update(visible=True)
+
+                gr.Button("跳转到普通用户界面").click(
+                    switch_to_regular_user,
+                    inputs=[],
+                    outputs=[admin_view, regular_user_view],
+                )
+
+            # 普通用户页面
+            with regular_user_view:
+                get_regular_user_interface(is_called=True)
+
+            # 访客页面
+            with guest_view:
+                gr.Textbox(
+                    label="404 页面内容", value=get_404_page(), interactive=False
+                )
+
+        # 登录界面
+        with gr.Row(visible=True) as login_view:
+            username = gr.Textbox(label="用户名")
+            password = gr.Textbox(label="密码", type="password")
+            login_btn = gr.Button("登录")
+            login_result = gr.Textbox(label="登录结果", interactive=False)
+
+            login_btn.click(
+                login,
+                inputs=[username, password],
+                outputs=[login_view, main_view, login_result],
             )
 
-    login_button.click(
-        handle_login,
-        inputs=[username, password],
-        outputs=[login_page, resource_page, login_output, tab1, tab2, tab3],
-    )
+        # 动态切换页面逻辑
+        def switch_view():
+            if user_permission_level == 1:  # 管理员
+                return (
+                    gr.update(visible=True),
+                    gr.update(visible=False),
+                    gr.update(visible=False),
+                )
+            elif user_permission_level == 2:  # 普通用户
+                return (
+                    gr.update(visible=False),
+                    gr.update(visible=True),
+                    gr.update(visible=False),
+                )
+            elif user_permission_level == 3:  # 访客
+                return (
+                    gr.update(visible=False),
+                    gr.update(visible=False),
+                    gr.update(visible=True),
+                )
+            else:
+                return (
+                    gr.update(visible=False),
+                    gr.update(visible=False),
+                    gr.update(visible=False),
+                )
 
-demo.launch()
+        # 登录后根据权限显示对应页面
+        load_page_btn = gr.Button("加载页面")
+        load_page_btn.click(
+            switch_view,
+            inputs=[],
+            outputs=[admin_view, regular_user_view, guest_view],
+        )
+
+    demo.launch()
+
+
+if __name__ == "__main__":
+    main_interface()
