@@ -3,11 +3,26 @@ from PaperManager import PaperManager
 from LectureManager import LectureManager
 from ProjectManager import ProjectManager
 from Config import Config
+from StatisticsGen import TeacherSummaryGenerator
 
 # 创建 Manager 实例
 paper_manager = PaperManager(Config.BASE_URL)
 lecture_manager = LectureManager(Config.BASE_URL)
 project_manager = ProjectManager(Config.BASE_URL)
+statistics_gen = TeacherSummaryGenerator(Config.BASE_URL + "/teacher/summary")
+
+
+# 点击按钮生成统计报告和 PDF 文件
+def generate_statistics_and_pdf(teacher_id, start_year, end_year):
+    markdown_content = statistics_gen.generate_teacher_summary(
+        teacher_id, start_year, end_year
+    )
+    if markdown_content:
+        pdf_file = statistics_gen.generate_pdf(markdown_content)
+        return markdown_content, pdf_file
+    else:
+        return "生成统计报告失败，请检查输入信息。", None
+
 
 # Gradio 界面
 with gr.Blocks() as demo:
@@ -636,5 +651,18 @@ with gr.Blocks() as demo:
                     ],
                     outputs=result,
                 )
+    with gr.Tab("生成教师统计报告"):
+        teacher_id_input = gr.Textbox(label="教师工号", placeholder="请输入教师工号")
+        start_year = gr.Dropdown(choices=Config.year_choices, label="起始年份")
+        end_year = gr.Dropdown(choices=Config.year_choices, label="结束年份")
+        generate_btn = gr.Button("生成统计报告")
+        markdown_output = gr.Markdown(label="统计报告内容")
+        pdf_download = gr.File(label="下载 PDF 文件")
+
+        generate_btn.click(
+            generate_statistics_and_pdf,
+            inputs=[teacher_id_input, start_year, end_year],
+            outputs=[markdown_output, pdf_download],
+        )
 
 demo.launch()
