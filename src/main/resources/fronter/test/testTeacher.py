@@ -5,8 +5,8 @@ BASE_URL = "http://localhost:8080/api/teacher/summary"
 
 # 定义测试参数
 params = {
-    "teacherId": "T0002",  # 教师工号
-    "startYear": 2020,  # 开始年份
+    "teacherId": "T0003",  # 教师工号
+    "startYear": 1800,  # 开始年份
     "endYear": 2023,  # 结束年份
 }
 
