@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CourseController {
 
+    private static final Logger logger = LoggerFactory.getLogger(CourseController.class);
+
     @Autowired
     private final CourseService courseService;
 
@@ -32,7 +36,10 @@ public class CourseController {
      */
     @PostMapping
     public Map<String, Object> addLecture(@RequestBody LectureCourseDTO lecture) {
-        return courseService.addLecture(lecture);
+        logger.info("Received request to add lecture: {}", lecture);
+        Map<String, Object> result = courseService.addLecture(lecture);
+        logger.info("Lecture added successfully: {}", result);
+        return result;
     }
 
     /**
@@ -41,7 +48,9 @@ public class CourseController {
      */
     @PutMapping
     public void updateLecture(@RequestBody LectureCourseDTO lecture) {
+        logger.info("Received request to update lecture: {}", lecture);
         courseService.updateLecture(lecture);
+        logger.info("Lecture updated successfully: {}", lecture);
     }
 
     /**
@@ -51,8 +60,11 @@ public class CourseController {
      */
     @DeleteMapping("/{courseId}/teachers/{teacherId}")
     public void deleteLecture(@PathVariable String courseId, @PathVariable String teacherId) {
+        logger.info("Received request to delete lecture with courseId: {} and teacherId: {}", courseId, teacherId);
         courseService.deleteLecture(courseId, teacherId);
+        logger.info("Lecture deleted successfully for courseId: {} and teacherId: {}", courseId, teacherId);
     }
+
     /**
      * 查询教师的所有主讲课程记录
      * @param teacherId 教师工号
@@ -60,7 +72,10 @@ public class CourseController {
      */
     @GetMapping("/teachers/{teacherId}")
     public Map<Integer, LectureCourseResponseDTO> getLecturesByTeacher(@PathVariable String teacherId) {
-        return courseService.getCoursesByTeacherId(teacherId);
+        logger.info("Received request to fetch lectures for teacherId: {}", teacherId);
+        Map<Integer, LectureCourseResponseDTO> lectures = courseService.getCoursesByTeacherId(teacherId);
+        logger.info("Fetched {} lectures for teacherId: {}", lectures.size(), teacherId);
+        return lectures;
     }
 
     /**
@@ -70,6 +85,9 @@ public class CourseController {
      */
     @GetMapping("/lectures/{courseId}")
     public List<LectureCourseDTO> getLecturesByCourse(@PathVariable String courseId) {
-        return courseService.getLecturesByCourseId(courseId);
+        logger.info("Received request to fetch lectures for courseId: {}", courseId);
+        List<LectureCourseDTO> lectures = courseService.getLecturesByCourseId(courseId);
+        logger.info("Fetched {} lectures for courseId: {}", lectures.size(), courseId);
+        return lectures;
     }
 }

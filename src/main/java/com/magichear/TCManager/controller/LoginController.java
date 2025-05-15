@@ -6,6 +6,8 @@ import com.magichear.TCManager.service.LoginService;
 
 import lombok.RequiredArgsConstructor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class LoginController {
 
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+
     @Autowired
     private final LoginService loginService;
 
@@ -27,6 +31,19 @@ public class LoginController {
      */
     @PostMapping
     public LoginResponseDTO login(@RequestBody LoginUserDTO loginRequest) {
-        return loginService.login(loginRequest);
+        // 记录接收到的登录请求
+        if (logger.isDebugEnabled()) {
+            logger.debug("Received login request: {}", loginRequest);
+        }
+
+        try {
+            logger.info("Processing login request for username: {}", loginRequest.getUsername());
+            LoginResponseDTO response = loginService.login(loginRequest);
+            logger.info("Login successful for username: {}", loginRequest.getUsername());
+            return response;
+        } catch (Exception e) {
+            logger.error("Login failed for username: {}", loginRequest.getUsername(), e);
+            throw e; // 继续抛出异常，交由全局异常处理器处理
+        }
     }
 }
