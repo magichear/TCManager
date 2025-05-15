@@ -24,6 +24,17 @@ def generate_statistics_and_pdf(teacher_id, start_year, end_year):
         return "生成统计报告失败，请检查输入信息。", None
 
 
+# 动态调整终止年份的最小值
+def update_end_year_options(start_year):
+    # 获取起始年份之后的年份列表
+    end_year_choices = [
+        year for year in Config.year_choices if int(year) >= int(start_year)
+    ]
+    return gr.update(
+        choices=end_year_choices, value=end_year_choices[0]
+    )  # 默认选中第一个可用年份
+
+
 # Gradio 界面
 with gr.Blocks() as demo:
     with gr.Tab("登记发表论文情况"):
@@ -236,6 +247,13 @@ with gr.Blocks() as demo:
                     choices=Config.year_choices, label="结束年份"
                 )
 
+                # 动态调整终止年份的最小值
+                proj_start_year.change(
+                    update_end_year_options,
+                    inputs=[proj_start_year],
+                    outputs=[proj_end_year],
+                )
+
                 # 动态表单：承担信息
                 with gr.Row():
                     teacher_id = gr.Textbox(label="教师工号")
@@ -378,6 +396,13 @@ with gr.Blocks() as demo:
                 )
                 proj_end_year = gr.Dropdown(
                     choices=Config.year_choices, label="结束年份"
+                )
+
+                # 动态调整终止年份的最小值
+                proj_start_year.change(
+                    update_end_year_options,
+                    inputs=[proj_start_year],
+                    outputs=[proj_end_year],
                 )
 
                 # 动态表单：承担信息
@@ -658,6 +683,13 @@ with gr.Blocks() as demo:
         generate_btn = gr.Button("生成统计报告")
         markdown_output = gr.Markdown(label="统计报告内容")
         pdf_download = gr.File(label="下载 PDF 文件")
+
+        # 动态调整终止年份的最小值
+        start_year.change(
+            update_end_year_options,
+            inputs=[start_year],
+            outputs=[end_year],
+        )
 
         generate_btn.click(
             generate_statistics_and_pdf,
