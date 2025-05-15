@@ -14,6 +14,7 @@ import java.sql.SQLException;
  */
 public abstract class EnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
 
+    @SuppressWarnings("unused")
     private final Class<E> type;
 
     /**
