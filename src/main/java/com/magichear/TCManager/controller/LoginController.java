@@ -9,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -49,14 +47,4 @@ public class LoginController {
         }
     }
 
-    /**
-     * 返回 404 页面
-     * @return 404 HTML 页面
-     */
-    @GetMapping("/404")
-    public ResponseEntity<Void> notFoundPage() {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .header("Location", "src/main/resources/static/404.html")
-                .build();
-    }
 }

@@ -1,0 +1,67 @@
+classDiagram
+    Browser --> OUser : 调用用户接口
+    OUser --> PaperManager : 用户数据交互
+    OUser --> LectureManager : 课程管理接口
+    OUser --> ProjectManager : 项目创建接口
+    OUser --> StatisticsGen : 统计生成请求
+    PaperManager --> Config : 读取配置
+    LectureManager --> Config : 读取配置
+    ProjectManager --> Config : 读取配置
+    StatisticsGen --> Translate : 翻译数据
+    StatisticsGen --> Config : 读取配置
+
+    class Browser {
+        +login(username, password)
+        +get_404_page()
+        +main_interface()
+    }
+
+    class OUser {
+        +generate_statistics_and_pdf(teacher_id, start_year, end_year)
+        +update_end_year_options(start_year)
+        +get_regular_user_interface(is_called)
+    }
+
+    class PaperManager {
+        +add_paper(paper_name, paper_src, paper_year, paper_type, paper_rank, authors)
+        +update_paper(paper_num, paper_name, paper_src, paper_year, paper_type, paper_rank, authors)
+        +delete_paper(paper_num)
+        +get_paper(paper_num)
+        +query_papers_by_teacher(teacher_id)
+    }
+
+    class LectureManager {
+        +add_lecture(teacher_id, course_id, lecture_year, lecture_term, lecture_hour)
+        +update_lecture(teacher_id, course_id, lecture_year, lecture_term, lecture_hour)
+        +delete_lecture(course_id, teacher_id)
+        +get_lectures_by_teacher(teacher_id)
+        +get_lectures_by_course(course_id)
+    }
+
+    class ProjectManager {
+        +add_project(proj_name, proj_src, proj_type, proj_start_year, proj_end_year, charges)
+        +update_project(proj_id, proj_name, proj_src, proj_type, proj_start_year, proj_end_year, charges)
+        +delete_project(proj_id)
+        +get_project(proj_id)
+        +query_projects_by_teacher(teacher_id)
+    }
+
+    class StatisticsGen {
+        +generate_teacher_summary(teacher_id, start_year, end_year)
+        +generate_pdf(markdown_content, file_name)
+    }
+
+    class Config {
+        +get_value(mMap, key)
+    }
+
+    class Translate {
+        +translate_sex(sex)
+        +translate_title(title)
+        +translate_paper_type(paper_type)
+        +translate_paper_rank(rank)
+        +translate_project_type(proj_type)
+        +translate_rank(rank)
+        +translate_term(term)
+        +translate_course_type(course_type)
+    }

@@ -1,0 +1,161 @@
+classDiagram
+    BaseTypeHandler <|-- EnumTypeHandler
+    BaseTypeHandler <|-- StringTypeHandler
+    EnumTypeHandler <|-- CourseTypeHandler
+    EnumTypeHandler <|-- PaperRankHandler
+    EnumTypeHandler <|-- PaperTypeHandler
+    EnumTypeHandler <|-- ProjTypeHandler
+    EnumTypeHandler <|-- SexHandler
+    EnumTypeHandler <|-- TermHandler
+    EnumTypeHandler <|-- TitleHandler
+
+    CourseTypeHandler --> CourseType
+    PaperRankHandler --> PaperRank
+    PaperTypeHandler --> PaperType
+    ProjTypeHandler --> ProjType
+    SexHandler --> Sex
+    TermHandler --> Term
+    TitleHandler --> Title
+
+    CourseType ..> EnumUtils
+    PaperRank ..> EnumUtils
+    PaperType ..> EnumUtils
+    ProjType ..> EnumUtils
+    Sex ..> EnumUtils
+    Term ..> EnumUtils
+    Title ..> EnumUtils
+
+    class BaseTypeHandler {
+        <<abstract>>
+        +setNonNullParameter(PreparedStatement, int, T, JdbcType)
+        +getNullableResult(ResultSet, String)
+        +getNullableResult(ResultSet, int)
+        +getNullableResult(CallableStatement, int)
+    }
+
+    class EnumTypeHandler {
+        <<abstract>>
+        -Class<E> type
+        +EnumTypeHandler(Class<E>)
+        +setNonNullParameter(PreparedStatement, int, E, JdbcType)
+        +getNullableResult(ResultSet, String)
+        +getNullableResult(ResultSet, int)
+        +getNullableResult(CallableStatement, int)
+        #fromValue(int) E
+        #toValue(E) int
+    }
+
+    class StringTypeHandler {
+        +setNonNullParameter(PreparedStatement, int, String, JdbcType)
+        +getNullableResult(ResultSet, String)
+        +getNullableResult(ResultSet, int)
+        +getNullableResult(CallableStatement, int)
+    }
+
+    class CourseTypeHandler {
+        +CourseTypeHandler()
+        +fromValue(int) CourseType
+        +toValue(CourseType) int
+    }
+
+    class PaperRankHandler {
+        +PaperRankHandler()
+        +fromValue(int) PaperRank
+        +toValue(PaperRank) int
+    }
+
+    class PaperTypeHandler {
+        +PaperTypeHandler()
+        +fromValue(int) PaperType
+        +toValue(PaperType) int
+    }
+
+    class ProjTypeHandler {
+        +ProjTypeHandler()
+        +fromValue(int) ProjType
+        +toValue(ProjType) int
+    }
+
+    class SexHandler {
+        +SexHandler()
+        +fromValue(int) Sex
+        +toValue(Sex) int
+    }
+
+    class TermHandler {
+        +TermHandler()
+        +fromValue(int) Term
+        +toValue(Term) int
+    }
+
+    class TitleHandler {
+        +TitleHandler()
+        +fromValue(int) Title
+        +toValue(Title) int
+    }
+
+    class CourseType {
+        +UNDERGRADUATE: int
+        +POSTGRADUATE: int
+        +fromValue(int): CourseType
+    }
+
+    class PaperRank {
+        +CCF_A: int
+        +CCF_B: int
+        +CCF_C: int
+        +CHINESE_CCF_A: int
+        +CHINESE_CCF_B: int
+        +NONE: int
+        +fromValue(int): PaperRank
+    }
+
+    class PaperType {
+        +FULL_PAPER: int
+        +SHORT_PAPER: int
+        +POSTER_PAPER: int
+        +DEMO_PAPER: int
+        +fromValue(int): PaperType
+    }
+
+    class ProjType {
+        +NATIONAL: int
+        +PROVINCIAL: int
+        +MUNICIPAL: int
+        +ENTERPRISE: int
+        +OTHER: int
+        +fromValue(int): ProjType
+    }
+
+    class Sex {
+        +MAN: int
+        +WOMAN: int
+        +fromValue(int): Sex
+    }
+
+    class Term {
+        +SPRING: int
+        +SUMMER: int
+        +AUTUMN: int
+        +fromValue(int): Term
+    }
+
+    class Title {
+        +POSTDOC: int
+        +ASSISTANT: int
+        +LECTURER: int
+        +ASSOCIATE_PROFESSOR: int
+        +SPECIAL_PROFESSOR: int
+        +PROFESSOR: int
+        +ASSISTANT_RESEARCHER: int
+        +SPECIAL_ASSOCIATE_RESEARCHER: int
+        +ASSOCIATE_RESEARCHER: int
+        +SPECIAL_RESEARCHER: int
+        +RESEARCHER: int
+        +fromValue(int): Title
+    }
+
+    class EnumUtils {
+        +fromValue(Class<T>, int) T
+        +isValidEnumValue(Class<T>, int) boolean
+    }

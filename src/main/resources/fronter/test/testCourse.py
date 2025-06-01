@@ -5,16 +5,16 @@ BASE_URL = "http://localhost:8080/api/courses"
 
 # 测试数据
 lecture_data = {
-    "courseId": "C001",
-    "teacherId": "T001",
+    "courseId": "C0001",
+    "teacherId": "T0001",
     "lectureYear": 2023,
     "lectureTerm": 0,
     "lectureHour": 40,
 }
 
 updated_lecture_data = {
-    "courseId": "C001",
-    "teacherId": "T001",
+    "courseId": "C0001",
+    "teacherId": "T0001",
     "lectureYear": 2024,
     "lectureTerm": 1,
     "lectureHour": 50,

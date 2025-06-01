@@ -1,0 +1,124 @@
+classDiagram
+    CourseController --> CourseService : 调用课程服务接口
+    EnumController --> EnumService : 调用枚举服务接口
+    LoginController --> LoginService : 调用登录服务接口
+    PaperController --> PaperService : 调用论文服务接口
+    ProjectController --> ProjectService : 调用项目服务接口
+    TeacherController --> TeacherService : 调用教师服务接口
+
+    CourseService --> CourseMapper : 数据交互
+    PaperService --> PaperMapper : 数据交互
+    ProjectService --> ProjectMapper : 数据交互
+    TeacherService --> TeacherMapper : 数据交互
+
+    class CourseController {
+        +addLecture(lecture : LectureCourseDTO) Map<String, Object>
+        +updateLecture(lecture : LectureCourseDTO) void
+        +deleteLecture(courseId : String, teacherId : String) void
+        +getLecturesByTeacher(teacherId : String) Map<Integer, LectureCourseResponseDTO>
+        +getLecturesByCourse(courseId : String) List<LectureCourseDTO>
+    }
+
+    class EnumController {
+        +getEnumValues(enumClassName : String) Map<Integer, String>
+    }
+
+    class LoginController {
+        +login(loginRequest : LoginUserDTO) LoginResponseDTO
+    }
+
+    class PaperController {
+        +addPaper(paperRequest : PaperRequestDTO) Map<String, Object>
+        +updatePaper(paperRequest : PaperRequestDTO) void
+        +deletePaper(paperNum : int) void
+        +getPaperByNum(paperNum : int) PaperDTO
+        +getPapersByTeacherId(teacherId : String) Map<Integer, PublishPaperResponseDTO>
+        +getAuthorsByPaperNum(paperNum : int) List<PublishPaperResponseDTO>
+    }
+
+    class ProjectController {
+        +addProject(projectRequest : ProjectRequestDTO) Map<String, Object>
+        +updateProject(projectRequest : ProjectRequestDTO) void
+        +deleteProject(projId : String) void
+        +getProjectById(projId : String) ProjectRequestDTO
+        +getProjectByTeacherId(teacherId : String) Map<Integer, ProjectResponseDTO>
+    }
+
+    class TeacherController {
+        +getTeacherSummary(teacherId : String, startYear : int, endYear : int) TeacherSummaryDTO
+    }
+
+    class CourseService {
+        +addLecture(lecture : LectureCourseDTO) Map<String, Object>
+        +updateLecture(lecture : LectureCourseDTO) void
+        +deleteLecture(courseId : String, teacherId : String) void
+        +getCoursesByTeacherId(teacherId : String) Map<Integer, LectureCourseResponseDTO>
+        +getLecturesByCourseId(courseId : String) List<LectureCourseDTO>
+    }
+
+    class EnumService {
+        +getEnumValues(enumClassName : String) Map<Integer, String>
+    }
+
+    class LoginService {
+        +login(loginRequest : LoginUserDTO) LoginResponseDTO
+    }
+
+    class PaperService {
+        +addPaper(paper : PaperDTO, authors : List<PublishPaperResponseDTO>) Map<String, Object>
+        +updatePaper(paper : PaperDTO, authors : List<PublishPaperResponseDTO>) void
+        +deletePaper(paperNum : int) void
+        +getPaperByNum(paperNum : int) PaperDTO
+        +getPapersByTeacherId(teacherId : String) Map<Integer, PublishPaperResponseDTO>
+        +getAuthorsByPaperNum(paperNum : int) List<PublishPaperResponseDTO>
+    }
+
+    class ProjectService {
+        +addProject(projectRequest : ProjectRequestDTO) Map<String, Object>
+        +deleteProject(projId : String) void
+        +updateProject(projectRequest : ProjectRequestDTO) void
+        +getProjectById(projId : String) ProjectRequestDTO
+        +getProjectByTeacherId(teacherId : String) Map<Integer, ProjectResponseDTO>
+    }
+
+    class TeacherService {
+        +getTeacherSummary(teacherId : String, startYear : int, endYear : int) TeacherSummaryDTO
+    }
+
+    class CourseMapper {
+        +insertLectureCourse(course : CourseDTO) void
+        +selectCourseById(courseId : String) CourseDTO
+        +deleteLectureCourse(courseId : String, teacherId : String) void
+        +selectLectureCoursesByTeacherId(teacherId : String) List<LectureCourseDTO>
+        +selectLectureCoursesByCourseId(courseId : String) List<LectureCourseDTO>
+        +getCourseHour(courseId : String) int
+        +getLectureHour(courseId : String, teacherId : String) int
+        +updateCourseHour(courseId : String, updatedCourseHour : Integer) void
+    }
+
+    class PaperMapper {
+        +insertPaper(paper : PaperDTO) void
+        +deletePaper(paperNum : int) void
+        +selectPaperByNum(paperNum : int) PaperDTO
+        +selectPapersByTeacherId(teacherId : String) List<PublishPaperDTO>
+        +insertAuthor(author : PublishPaperResponseDTO) void
+        +deleteAuthor(paperNum : int, teacherId : String) void
+        +selectAuthorsByPaperNum(paperNum : int) List<PublishPaperResponseDTO>
+    }
+
+    class ProjectMapper {
+        +insertProject(project : ProjectionDTO) void
+        +deleteProject(projId : String) void
+        +updateProject(project : ProjectionDTO) int
+        +selectProjectById(projId : String) ProjectionDTO
+        +insertCharge(charge : InChargeDTO) void
+        +deleteCharge(projId : String, teacherId : String) void
+        +selectChargesById(projId : String) List<InChargeDTO>
+        +checkProjectRankDuplicate(projId : String, rank : int) boolean
+        +getProjectBalance(projId : String) Double
+        +updateProjectBalance(projId : String, updatedProjBalance : Double) void
+    }
+
+    class TeacherMapper {
+        +selectTeacherById(teacherId : String) TeacherDTO
+    }

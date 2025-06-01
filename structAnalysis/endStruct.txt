@@ -1,0 +1,132 @@
+.
+├── src
+│   ├── main
+│   │   ├── java
+│   │   │   └── com
+│   │   │       └── magichear
+│   │   │           └── TCManager
+│   │   │               ├── TcManagerApplication.java
+│   │   │               ├── config
+│   │   │               │   └── GlobalExceptionHandler.java
+│   │   │               ├── controller
+│   │   │               │   ├── CourseController.java
+│   │   │               │   ├── CustomErrorController.java
+│   │   │               │   ├── EnumController.java
+│   │   │               │   ├── LoginController.java
+│   │   │               │   ├── PaperController.java
+│   │   │               │   ├── ProjectController.java
+│   │   │               │   └── TeacherController.java
+│   │   │               ├── dto
+│   │   │               │   ├── Course
+│   │   │               │   │   ├── CourseDTO.java
+│   │   │               │   │   ├── LectrueCourseRequestDTO.java
+│   │   │               │   │   ├── LectureCourseDTO.java
+│   │   │               │   │   └── LectureCourseResponseDTO.java
+│   │   │               │   ├── Login
+│   │   │               │   │   ├── LoginResponseDTO.java
+│   │   │               │   │   └── LoginUserDTO.java
+│   │   │               │   ├── Paper
+│   │   │               │   │   ├── PaperDTO.java
+│   │   │               │   │   ├── PaperRequestDTO.java
+│   │   │               │   │   ├── PublishPaperDTO.java
+│   │   │               │   │   └── PublishPaperResponseDTO.java
+│   │   │               │   ├── Project
+│   │   │               │   │   ├── InChargeDTO.java
+│   │   │               │   │   ├── ProjectRequestDTO.java
+│   │   │               │   │   ├── ProjectResponseDTO.java
+│   │   │               │   │   └── ProjectionDTO.java
+│   │   │               │   ├── TeacherDTO.java
+│   │   │               │   └── TeacherSummaryDTO.java
+│   │   │               ├── enums
+│   │   │               │   ├── Course
+│   │   │               │   │   ├── CourseType.java
+│   │   │               │   │   └── Term.java
+│   │   │               │   ├── Login
+│   │   │               │   │   └── LoginUserType.java
+│   │   │               │   ├── Paper
+│   │   │               │   │   ├── PaperRank.java
+│   │   │               │   │   └── PaperType.java
+│   │   │               │   ├── Project
+│   │   │               │   │   └── ProjType.java
+│   │   │               │   ├── Sex.java
+│   │   │               │   └── Title.java
+│   │   │               ├── mapper
+│   │   │               │   ├── CourseMapper.java
+│   │   │               │   ├── PaperMapper.java
+│   │   │               │   ├── ProjectMapper.java
+│   │   │               │   └── TeacherMapper.java
+│   │   │               ├── service
+│   │   │               │   ├── CourseService.java
+│   │   │               │   ├── EnumService.java
+│   │   │               │   ├── LoginService.java
+│   │   │               │   ├── PaperService.java
+│   │   │               │   ├── ProjectService.java
+│   │   │               │   ├── TeacherService.java
+│   │   │               │   └── impl
+│   │   │               │       ├── CourseServiceImpl.java
+│   │   │               │       ├── EnumServiceImpl.java
+│   │   │               │       ├── LoginServiceImpl.java
+│   │   │               │       ├── PaperServiceImpl.java
+│   │   │               │       ├── ProjectServiceImpl.java
+│   │   │               │       └── TeacherServiceImpl.java
+│   │   │               └── utils
+│   │   │                   ├── CourseTypeHandler.java
+│   │   │                   ├── EnumTypeHandler.java
+│   │   │                   ├── EnumUtils.java
+│   │   │                   ├── IdUtils.java
+│   │   │                   ├── PaperRankHandler.java
+│   │   │                   ├── PaperTypeHandler.java
+│   │   │                   ├── ProjTypeHandler.java
+│   │   │                   ├── SexHandler.java
+│   │   │                   ├── StringTypeHandler.java
+│   │   │                   ├── TermHandler.java
+│   │   │                   └── TitleHandler.java
+│   │   └── resources
+│   │       ├── application.properties
+│   │       ├── fronter
+│   │       │   ├── Broswer.py
+│   │       │   ├── Config.py
+│   │       │   ├── LectureManager.py
+│   │       │   ├── OUser.py
+│   │       │   ├── PaperManager.py
+│   │       │   ├── ProjectManager.py
+│   │       │   ├── StatisticsGen.py
+│   │       │   └── Translate.py
+│   │       ├── mapper
+│   │       │   ├── CourseMapper.xml
+│   │       │   ├── PaperMapper.xml
+│   │       │   ├── ProjectMapper.xml
+│   │       │   └── TeacherMapper.xml
+│   │       ├── static
+│   │       │   └── 404.html
+│   │       └── templates
+
+CourseController depends on: LectureCourseDTO, LectureCourseResponseDTO, CourseService
+EnumController depends on: EnumService
+LoginController depends on: LoginUserDTO, LoginResponseDTO, LoginService
+PaperController depends on: PaperDTO, PublishPaperResponseDTO, PaperRequestDTO, PaperService
+ProjectController depends on: ProjectRequestDTO, ProjectResponseDTO, ProjectService
+TeacherController depends on: TeacherSummaryDTO, TeacherService
+TeacherDTO depends on: Sex, Title
+TeacherSummaryDTO depends on: LectureCourseResponseDTO, ProjectResponseDTO, PublishPaperResponseDTO
+CourseDTO depends on: CourseType
+LectureCourseDTO depends on: Term
+LectureCourseResponseDTO depends on: CourseType, Term
+LoginResponseDTO depends on: LoginUserType
+LoginUserDTO depends on: LoginUserType
+PaperDTO depends on: PaperRank, PaperType, IdUtils
+PublishPaperResponseDTO depends on: PaperRank, PaperType
+ProjectionDTO depends on: ProjType, IdUtils
+CourseServiceImpl depends on: CourseMapper, CourseService
+EnumServiceImpl depends on: EnumService
+LoginServiceImpl depends on: LoginUserDTO, LoginResponseDTO, LoginUserType, LoginService
+PaperServiceImpl depends on: PaperDTO, PublishPaperDTO, PublishPaperResponseDTO, PaperRank, PaperType, PaperMapper, PaperService, EnumUtils
+ProjectServiceImpl depends on: InChargeDTO, ProjectRequestDTO, ProjectResponseDTO, ProjectionDTO, ProjectMapper, ProjectService
+TeacherServiceImpl depends on: LectureCourseResponseDTO, ProjectResponseDTO, PublishPaperResponseDTO, TeacherDTO, TeacherSummaryDTO, TeacherMapper, CourseService, ProjectService, PaperService, TeacherService
+CourseTypeHandler depends on: CourseType
+PaperRankHandler depends on: PaperRank
+PaperTypeHandler depends on: PaperType
+ProjTypeHandler depends on: ProjType
+SexHandler depends on: Sex
+TermHandler depends on: Term
+TitleHandler depends on: Title

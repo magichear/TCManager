@@ -2,7 +2,7 @@ import requests
 
 # 定义请求的 URL 和参数
 base_url = "http://localhost:8080/api/papers/authors"
-teacher_id = "T001"  # 替换为实际的教师工号
+teacher_id = "T0001"
 url = f"{base_url}/{teacher_id}/papers"
 
 try:

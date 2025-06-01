@@ -1,14 +1,17 @@
 import gradio as gr
-import requests
+import os
 from OUser import get_regular_user_interface  # 导入普通用户界面函数
+import requests
 
 # 后端登录接口地址
 LOGIN_API_URL = "http://localhost:8080/api/login"
-NOT_FOUND_API_URL = "http://localhost:8080/api/login/404"  # 后端 404 页面接口
 
 # 定义全局变量存储用户权限级别
 user_permission_level = None
 has_switched_to_regular_user = False  # 标记是否已从管理员页面跳转到普通用户页面
+
+# 404 页面相对路径
+RELATIVE_404_PATH = "../static/404.html"  # 相对于 Broswer.py 的路径
 
 
 # 登录函数
@@ -60,15 +63,18 @@ def login(username, password):
 
 
 # 获取 404 页面内容
-def get_404_page():
-    try:
-        response = requests.get(NOT_FOUND_API_URL)
-        if response.status_code == 404:
-            return response.text  # 返回 404 页面内容
-        else:
-            return f"无法加载 404 页面，HTTP 状态码：{response.status_code}"
-    except Exception as e:
-        return f"加载 404 页面失败：{str(e)}"
+def get_404_page_content():
+    # 获取 404 页面绝对路径
+    abs_404_path = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), RELATIVE_404_PATH)
+    )
+    if os.path.exists(abs_404_path):
+        # print(f"[DEBUG] 404 页面路径：{abs_404_path}")
+        with open(abs_404_path, "r", encoding="utf-8") as f:
+            return f.read()
+    else:
+        print("[ERROR] 404 页面不存在！")
+        return "404 页面未找到！"
 
 
 # 主界面
@@ -105,8 +111,8 @@ def main_interface():
 
             # 访客页面
             with guest_view:
-                gr.Textbox(
-                    label="404 页面内容", value=get_404_page(), interactive=False
+                gr.HTML(
+                    value=get_404_page_content(),
                 )
 
         # 登录界面

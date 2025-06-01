@@ -63,7 +63,8 @@ public interface CourseMapper {
     /**
      * 更新课程学时数
      *
-     * @param course 课程信息
+     * @param courseId 课程号
+     * @param updatedCourseHour 更新后的课程学时数
      */
     void updateCourseHour(String courseId, Integer updatedCourseHour);
 }

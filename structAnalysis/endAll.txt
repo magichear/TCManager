@@ -1,0 +1,196 @@
+graph TB
+    %% Paper 模块
+    subgraph PaperModule [Paper Module]
+        subgraph PaperControllers [Controllers]
+            PaperController
+        end
+        subgraph PaperDTOs [DTOs]
+            PaperDTO
+            PaperRequestDTO
+            PublishPaperDTO
+            PublishPaperResponseDTO
+        end
+        subgraph PaperEnums [Enums]
+            PaperRank
+            PaperType
+            subgraph PaperHandlers [Handlers]
+                PaperRankHandler --> PaperRank
+                PaperTypeHandler --> PaperType
+            end
+        end
+        subgraph PaperServices [Services]
+            PaperService
+            PaperServiceImpl
+            PaperMapper
+        end
+    end
+
+    %% Teacher 模块
+    subgraph TeacherModule [Teacher Module]
+        subgraph TeacherControllers [Controllers]
+            TeacherController
+        end
+        subgraph TeacherDTOs [DTOs]
+            TeacherDTO
+            TeacherSummaryDTO
+        end
+        subgraph TeacherEnums [Enums]
+            Sex
+            Title
+            subgraph TeacherHandlers [Handlers]
+                SexHandler --> Sex
+                TitleHandler --> Title
+            end
+        end
+        subgraph TeacherServices [Services]
+            TeacherService
+            TeacherServiceImpl
+            TeacherMapper
+        end
+    end
+
+    %% Project 模块
+    subgraph ProjectModule [Project Module]
+        subgraph ProjectControllers [Controllers]
+            ProjectController
+        end
+        subgraph ProjectDTOs [DTOs]
+            InChargeDTO
+            ProjectRequestDTO
+            ProjectResponseDTO
+            ProjectionDTO
+        end
+        subgraph ProjectEnums [Enums]
+            ProjType
+            subgraph ProjectHandlers [Handlers]
+                ProjTypeHandler --> ProjType
+            end
+        end
+        subgraph ProjectServices [Services]
+            ProjectService
+            ProjectServiceImpl
+            ProjectMapper
+        end
+    end
+
+    %% Course 模块
+    subgraph CourseModule [Course Module]
+        subgraph CourseControllers [Controllers]
+            CourseController
+        end
+        subgraph CourseDTOs [DTOs]
+            CourseDTO
+            LectureCourseDTO
+            LectureCourseResponseDTO
+            LectrueCourseRequestDTO
+        end
+        subgraph CourseEnums [Enums]
+            CourseType
+            Term
+            subgraph CourseHandlers [Handlers]
+                CourseTypeHandler --> CourseType
+                TermHandler --> Term
+            end
+        end
+        subgraph CourseServices [Services]
+            CourseService
+            CourseServiceImpl
+            CourseMapper
+        end
+    end
+
+    %% Login 模块
+    subgraph LoginModule [Login Module]
+        subgraph LoginControllers [Controllers]
+            LoginController
+        end
+        subgraph LoginDTOs [DTOs]
+            LoginResponseDTO
+            LoginUserDTO
+        end
+        subgraph LoginEnums [Enums]
+            LoginUserType
+        end
+        subgraph LoginServices [Services]
+            LoginService
+            LoginServiceImpl
+        end
+    end
+
+    %% Enum 模块
+    subgraph EnumModule [Enum Module]
+        subgraph EnumControllers [Controllers]
+            EnumController
+        end
+        subgraph EnumServices [Services]
+            EnumService
+            EnumServiceImpl
+        end
+        EnumUtils
+    end
+
+    %% 控制器依赖关系
+    CourseController --> LectureCourseDTO
+    CourseController --> LectureCourseResponseDTO
+    CourseController --> CourseService
+    EnumController --> EnumService
+    LoginController --> LoginUserDTO
+    LoginController --> LoginResponseDTO
+    LoginController --> LoginService
+    PaperController --> PaperDTO
+    PaperController --> PublishPaperResponseDTO
+    PaperController --> PaperRequestDTO
+    PaperController --> PaperService
+    ProjectController --> ProjectRequestDTO
+    ProjectController --> ProjectResponseDTO
+    ProjectController --> ProjectService
+    TeacherController --> TeacherSummaryDTO
+    TeacherController --> TeacherService
+
+    %% 服务实现依赖关系
+    CourseServiceImpl --> CourseMapper
+    EnumServiceImpl --> EnumService
+    LoginServiceImpl --> LoginUserDTO
+    LoginServiceImpl --> LoginResponseDTO
+    LoginServiceImpl --> LoginUserType
+    PaperServiceImpl --> PaperDTO
+    PaperServiceImpl --> PublishPaperDTO
+    PaperServiceImpl --> PublishPaperResponseDTO
+    PaperServiceImpl --> PaperRank
+    PaperServiceImpl --> PaperType
+    PaperServiceImpl --> PaperMapper
+    ProjectServiceImpl --> InChargeDTO
+    ProjectServiceImpl --> ProjectRequestDTO
+    ProjectServiceImpl --> ProjectResponseDTO
+    ProjectServiceImpl --> ProjectionDTO
+    ProjectServiceImpl --> ProjectMapper
+    TeacherServiceImpl --> LectureCourseResponseDTO
+    TeacherServiceImpl --> ProjectResponseDTO
+    TeacherServiceImpl --> PublishPaperResponseDTO
+    TeacherServiceImpl --> TeacherDTO
+    TeacherServiceImpl --> TeacherSummaryDTO
+    TeacherServiceImpl --> TeacherMapper
+    TeacherServiceImpl --> CourseService
+    TeacherServiceImpl --> ProjectService
+    TeacherServiceImpl --> PaperService
+    TeacherServiceImpl --> TeacherService
+
+    %% DTO 依赖关系
+    TeacherDTO --> Sex
+    TeacherDTO --> Title
+    TeacherSummaryDTO --> LectureCourseResponseDTO
+    TeacherSummaryDTO --> ProjectResponseDTO
+    TeacherSummaryDTO --> PublishPaperResponseDTO
+    CourseDTO --> CourseType
+    LectureCourseDTO --> Term
+    LectureCourseResponseDTO --> CourseType
+    LectureCourseResponseDTO --> Term
+    LoginResponseDTO --> LoginUserType
+    LoginUserDTO --> LoginUserType
+    PaperDTO --> PaperRank
+    PaperDTO --> PaperType
+    PaperDTO --> IdUtils
+    PublishPaperResponseDTO --> PaperRank
+    PublishPaperResponseDTO --> PaperType
+    ProjectionDTO --> ProjType
+    ProjectionDTO --> IdUtils

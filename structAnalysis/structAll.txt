@@ -1,0 +1,35 @@
+flowchart TD
+    Browser -->|普通用户界面| OUser
+    Browser -->|管理员界面（待完善）| SUser
+    Browser -->|访客界面（待完善）| GUser
+    Browser -->|调用登录控制器| LoginController      
+    OUser -->|发表论文接口| PaperManager
+    OUser -->|主讲课程接口| LectureManager
+    OUser -->|项目管理接口| ProjectManager
+    OUser -->|统计信息生成| StatisticsGen
+    PaperManager -->|调用发表论文控制器| PaperController
+    LectureManager -->|调用主讲课程控制器| CourseController
+    ProjectManager -->|调用项目控制器| ProjectController
+    StatisticsGen -->|调用教师信息控制器| TeacherController
+
+    %% 控制器到服务层
+    CourseController -->|调用服务| CourseService
+    LoginController -->|调用服务| LoginService
+    PaperController -->|调用服务| PaperService
+
+    TeacherService -->|调用 Mapper| TeacherMapper      
+    TeacherService -->|调用服务| ProjectService    
+
+    ProjectController -->|调用服务| ProjectService
+    TeacherController -->|调用服务| TeacherService
+
+    TeacherService -->|调用服务| CourseService
+    TeacherService -->|调用服务| PaperService
+
+
+    %% 服务层到 Mapper
+    CourseService -->|调用 Mapper| CourseMapper
+    LoginService -->|调用 Mapper| LoginMapper
+    PaperService -->|调用 Mapper| PaperMapper
+  
+    ProjectService -->|调用 Mapper| ProjectMapper

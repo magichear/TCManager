@@ -74,13 +74,31 @@ def get_regular_user_interface(is_called=True):
                     def add_author(
                         teacher_id, publish_rank, is_corresponding, authors_list
                     ):
+                        # 检查排名是否重复
+                        if any(
+                            author["publishRank"] == int(publish_rank)
+                            for author in authors_list
+                        ):
+                            return authors_list, "排名重复，请选择其他排名！"
+
                         new_author = {
                             "teacherId": teacher_id,
                             "publishRank": int(publish_rank),
                             "isCorresponding": is_corresponding,
                         }
                         authors_list.append(new_author)
-                        return authors_list, format_authors(authors_list)
+
+                        # 调整排名以确保连续
+                        authors_list = adjust_author_ranks(authors_list)
+                        feedback = (
+                            "添加成功！排名已调整为连续。"
+                            if len(authors_list) > 1
+                            else "添加成功！"
+                        )
+                        return (
+                            authors_list,
+                            format_authors(authors_list) + f"\n\n{feedback}",
+                        )
 
                     # 格式化作者列表为美观的字符串
                     def format_authors(authors_list):
@@ -91,6 +109,13 @@ def get_regular_user_interface(is_called=True):
                                 f"{idx + 1}. 工号: {author['teacherId']}, 排名: {author['publishRank']}, 通讯作者: {corresponding}"
                             )
                         return "\n".join(formatted)
+
+                    # 调整作者排名以确保连续
+                    def adjust_author_ranks(authors_list):
+                        authors_list.sort(key=lambda x: x["publishRank"])  # 按排名排序
+                        for idx, author in enumerate(authors_list):
+                            author["publishRank"] = idx + 1  # 从 1 开始重新编号
+                        return authors_list
 
                     add_author_btn.click(
                         add_author,
@@ -107,6 +132,9 @@ def get_regular_user_interface(is_called=True):
                     def delete_author(index, authors_list):
                         if 0 <= index < len(authors_list):
                             authors_list.pop(index)
+
+                        # 调整排名以确保连续
+                        authors_list = adjust_author_ranks(authors_list)
                         return authors_list, format_authors(authors_list)
 
                     delete_index = gr.Number(
@@ -196,28 +224,6 @@ def get_regular_user_interface(is_called=True):
                         label="作者列表", interactive=False, lines=5
                     )
 
-                    # 添加作者到列表
-                    def add_author(
-                        teacher_id, publish_rank, is_corresponding, authors_list
-                    ):
-                        new_author = {
-                            "teacherId": teacher_id,
-                            "publishRank": int(publish_rank),
-                            "isCorresponding": is_corresponding,
-                        }
-                        authors_list.append(new_author)
-                        return authors_list, format_authors(authors_list)
-
-                    # 格式化作者列表为美观的字符串
-                    def format_authors(authors_list):
-                        formatted = []
-                        for idx, author in enumerate(authors_list):
-                            corresponding = "是" if author["isCorresponding"] else "否"
-                            formatted.append(
-                                f"{idx + 1}. 工号: {author['teacherId']}, 排名: {author['publishRank']}, 通讯作者: {corresponding}"
-                            )
-                        return "\n".join(formatted)
-
                     add_author_btn.click(
                         add_author,
                         inputs=[
@@ -228,17 +234,6 @@ def get_regular_user_interface(is_called=True):
                         ],
                         outputs=[authors_list, authors_display],
                     )
-
-                    # 删除作者
-                    def delete_author(index, authors_list):
-                        if 0 <= index < len(authors_list):
-                            authors_list.pop(index)
-                        return authors_list, format_authors(authors_list)
-
-                    delete_index = gr.Number(
-                        label="删除作者索引（从1开始）", precision=0
-                    )
-                    delete_author_btn = gr.Button("删除作者")
 
                     delete_author_btn.click(
                         delete_author,
